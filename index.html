@@ -8,455 +8,159 @@
 <title>Edzésnapló</title>
 <style>
 :root{
-  --navy:#1a2d5a;
-  --navy2:#213570;
-  --navy3:#2a4090;
-  --blue:#2563eb;
-  --blue2:#3b7fff;
-  --accent:#4f9cff;
-  --accent2:#7bb8ff;
-  --bg:#f0f4fb;
-  --bg2:#ffffff;
-  --bg3:#e8eef8;
-  --text:#0f1e3d;
-  --text2:#4a5a80;
-  --text3:#8898b8;
-  --yellow:#f59e0b;
-  --yellow-bg:#fffbeb;
-  --yellow-border:#fde68a;
-  --green:#10b981;
-  --green-bg:#ecfdf5;
-  --red:#ef4444;
+  --navy:#1a2d5a;--navy2:#213570;--navy3:#2a4090;--blue:#2563eb;--blue2:#3b7fff;--accent:#4f9cff;--accent2:#7bb8ff;
+  --bg:#f0f4fb;--bg2:#ffffff;--bg3:#e8eef8;--text:#0f1e3d;--text2:#4a5a80;--text3:#8898b8;
+  --yellow:#f59e0b;--yellow-bg:#fffbeb;--yellow-border:#fde68a;--green:#10b981;--green-bg:#ecfdf5;--red:#ef4444;--red-bg:#fef2f2;
   --r:16px;--r-sm:10px;--r-xs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overscroll-behavior:none;}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* HEADER */
-.hdr{background:linear-gradient(160deg,var(--navy) 0%,var(--navy3) 100%);position:sticky;top:0;z-index:100;padding:0 18px;box-shadow:0 4px 24px rgba(26,45,90,0.18);}
-.hdr-top{display:flex;align-items:center;justify-content:space-between;height:58px;}
-.logo{font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#fff;}
-.logo em{color:var(--accent2);font-style:normal;}
-.hdr-sub{font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.3px;text-transform:uppercase;}
-
-/* TABS */
-.tab-section{padding:10px 0 12px;}
-.tab-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;}
-.tab-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-.tab-row::-webkit-scrollbar{display:none;}
-.tab{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:600;padding:7px 16px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;outline:none;}
-.tab.active{background:#fff;border-color:#fff;color:var(--navy);}
-.tab:active{transform:scale(.95);}
-
-/* HERO CARD */
-.hero-wrap{padding:16px 16px 0;}
-.hero-card{background:linear-gradient(135deg,var(--navy2) 0%,var(--blue) 100%);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(37,99,235,0.25);}
-.hero-card::before{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.06);}
-.hero-card::after{content:'';position:absolute;right:20px;bottom:-40px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04);}
-.hero-label{font-size:11px;font-weight:700;letter-spacing:0.6px;opacity:0.6;text-transform:uppercase;margin-bottom:4px;}
-.hero-week{font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px;}
-.hero-cycle{font-size:13px;opacity:0.6;font-weight:500;}
-.hero-pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
-.hero-pill{background:rgba(255,255,255,0.15);border-radius:12px;padding:5px 12px;font-size:12px;font-weight:600;}
-
-/* CONTENT */
-.content{padding:14px 16px 96px;}
-
-/* SECTION TITLE */
-.section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin:16px 0 8px 2px;}
-
-/* DAY CARD */
-.day-card{background:var(--bg2);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
-.day-hdr{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none;}
-.day-icon-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.day-icon-wrap svg{width:20px;height:20px;}
-.day-info{flex:1;}
-.day-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.2;}
-.day-sub{font-size:12px;color:var(--text3);font-weight:500;margin-top:1px;}
-.day-chevron{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .25s;}
-.day-chevron svg{width:14px;height:14px;stroke:var(--text3);}
-.day-card.open .day-chevron{transform:rotate(180deg);}
-.day-exlist{display:none;border-top:1px solid var(--bg3);}
-.day-card.open .day-exlist{display:block;}
-
-/* EXERCISE */
-.ex-block{padding:14px 16px 10px;border-bottom:1px solid var(--bg3);}
-.ex-block:last-child{border-bottom:none;}
-.ex-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;}
-.col-hdr{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;}
-.col-h{font-size:10px;font-weight:700;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:0.5px;}
-
-/* SET ROW */
-.set-row{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;align-items:start;}
-.set-lbl{height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:var(--r-xs);font-size:11px;font-weight:800;color:var(--text3);}
-.inp-wrap{display:flex;flex-direction:column;gap:3px;}
-.set-inp{background:var(--bg3);border:1.5px solid transparent;border-radius:var(--r-xs);color:var(--text);font-size:17px;font-weight:700;height:44px;padding:0 8px;text-align:center;width:100%;outline:none;-webkit-appearance:none;transition:all .15s;}
-.set-inp:focus{border-color:var(--blue);background:#eff6ff;color:var(--blue);}
-.set-inp::placeholder{color:var(--text3);font-size:13px;font-weight:400;}
-.set-inp.rir{background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow);}
-.set-inp.rir:focus{border-color:var(--yellow);background:#fef9c3;}
-.prev-val{font-size:10px;color:var(--text3);text-align:center;height:13px;line-height:13px;font-weight:500;}
-
-/* NEW CYCLE BANNER */
-.ncb{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--r);padding:18px;margin-bottom:4px;color:#fff;}
-.ncb-title{font-size:16px;font-weight:800;margin-bottom:4px;}
-.ncb-sub{font-size:13px;opacity:0.7;margin-bottom:14px;line-height:1.4;}
-.ncb-btn{background:#fff;border:none;border-radius:var(--r-sm);color:var(--navy);font-size:14px;font-weight:800;padding:12px 20px;cursor:pointer;width:100%;transition:opacity .15s;}
-.ncb-btn:active{opacity:.85;}
-
-/* STAT PAGE */
-.pr-page{padding:14px 16px 96px;}
-.pr-card{background:var(--bg2);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
-.pr-card-hdr{padding:13px 16px 11px;border-bottom:1px solid var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.pr-ex{font-size:14px;font-weight:700;flex:1;line-height:1.3;color:var(--text);}
-.pr-badge{background:linear-gradient(90deg,var(--blue),var(--accent));color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;white-space:nowrap;flex-shrink:0;}
-.pr-cycles{display:flex;overflow-x:auto;scrollbar-width:none;}
-.pr-cycles::-webkit-scrollbar{display:none;}
-.pr-cyc{padding:12px 14px;text-align:center;border-right:1px solid var(--bg3);flex-shrink:0;min-width:90px;}
-.pr-cyc:last-child{border-right:none;}
-.pr-cyc-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
-.pr-1rm{font-size:19px;font-weight:800;color:var(--text2);}
-.pr-1rm.is-pr{color:var(--blue);}
-.pr-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4;}
-.pr-empty{font-size:13px;color:var(--text3);font-style:italic;padding:12px 16px;}
-
-/* TOAST */
-.toast{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:9px 22px;border-radius:20px;opacity:0;transition:all .25s;z-index:500;pointer-events:none;box-shadow:0 4px 16px rgba(16,185,129,0.3);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* BOTTOM NAV */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bg3);display:flex;padding-bottom:env(safe-area-inset-bottom,0);z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0 13px;color:var(--text3);cursor:pointer;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border:none;background:none;transition:color .15s;}
-.bnav-btn svg{width:22px;height:22px;stroke-width:1.8;}
-.bnav-btn.active{color:var(--blue);}
-.bnav-btn:active{opacity:.6;}
-
-/* DAY COLORS */
-.ic-leg{background:#fef2f2;}.ic-leg svg{stroke:#ef4444;}
-.ic-upper{background:#eff6ff;}.ic-upper svg{stroke:#3b82f6;}
-.ic-lower{background:#fff7ed;}.ic-lower svg{stroke:#f97316;}
-.ic-push{background:#faf5ff;}.ic-push svg{stroke:#8b5cf6;}
-.ic-pull{background:#f0fdf4;}.ic-pull svg{stroke:#22c55e;}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
+button,input{font:inherit;}
+button{cursor:pointer;border:none;}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
 input[type=number]{-moz-appearance:textfield;}
+
+.hdr{background:linear-gradient(160deg,var(--navy) 0%,var(--navy3) 100%);position:sticky;top:0;z-index:100;padding:0 18px;box-shadow:0 4px 24px rgba(26,45,90,0.18);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;min-height:58px;gap:10px;}
+.logo{font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#fff;white-space:nowrap;}.logo em{color:var(--accent2);font-style:normal;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,0.48);font-weight:700;letter-spacing:0.3px;text-transform:uppercase;text-align:right;}
+.tab-section{padding:8px 0 12px;}.tab-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;}
+.tab-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}.tab-row::-webkit-scrollbar{display:none;}
+.tab{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:700;padding:7px 16px;white-space:nowrap;flex-shrink:0;transition:all .15s;outline:none;}
+.tab.active{background:#fff;border-color:#fff;color:var(--navy);}.tab:active,.btn:active,.bnav-btn:active{transform:scale(.97);}
+.content,.pr-page,.settings-page{padding:14px 16px 98px;}.section-title{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin:16px 0 8px 2px;}
+
+.hero-wrap{padding:16px 16px 0;}.hero-card{background:linear-gradient(135deg,var(--navy2) 0%,var(--blue) 100%);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(37,99,235,0.25);}
+.hero-card::before{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.06);}.hero-card::after{content:'';position:absolute;right:20px;bottom:-40px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.hero-label{font-size:11px;font-weight:800;letter-spacing:0.6px;opacity:0.62;text-transform:uppercase;margin-bottom:4px;}.hero-week{font-size:28px;font-weight:850;letter-spacing:-0.5px;margin-bottom:2px;}.hero-cycle{font-size:13px;opacity:0.7;font-weight:600;}
+.hero-pills{display:flex;gap:8px;margin-top:14px;overflow-x:auto;scrollbar-width:none;}.hero-pill{background:rgba(255,255,255,0.15);border-radius:12px;padding:6px 12px;font-size:12px;font-weight:700;white-space:nowrap;}.hero-pill.active{background:#fff;color:var(--navy);}
+
+.card,.day-card,.pr-card,.settings-card,.summary-card{background:var(--bg2);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.day-hdr{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none;}.day-icon-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.day-icon-wrap svg{width:20px;height:20px;}
+.day-info{flex:1;min-width:0;}.day-name{font-size:15px;font-weight:800;color:var(--text);line-height:1.2;}.day-sub{font-size:12px;color:var(--text3);font-weight:600;margin-top:1px;}.day-chevron{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .25s;}.day-chevron svg{width:14px;height:14px;stroke:var(--text3);}.day-card.open .day-chevron{transform:rotate(180deg);}.day-exlist{display:none;border-top:1px solid var(--bg3);}.day-card.open .day-exlist{display:block;}
+.ex-block{padding:14px 16px 12px;border-bottom:1px solid var(--bg3);}.ex-block:last-child{border-bottom:none;}.ex-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}.ex-name{font-size:14px;font-weight:800;color:var(--text);line-height:1.25;}
+.col-hdr{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;}.col-h{font-size:10px;font-weight:800;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:0.5px;}.set-row{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;align-items:start;}.set-lbl{height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:var(--r-xs);font-size:11px;font-weight:850;color:var(--text3);}.inp-wrap{display:flex;flex-direction:column;gap:3px;}.set-inp{background:var(--bg3);border:1.5px solid transparent;border-radius:var(--r-xs);color:var(--text);font-size:17px;font-weight:800;height:44px;padding:0 8px;text-align:center;width:100%;outline:none;-webkit-appearance:none;transition:all .15s;}.set-inp:focus{border-color:var(--blue);background:#eff6ff;color:var(--blue);}.set-inp::placeholder{color:var(--text3);font-size:13px;font-weight:500;}.set-inp.rir{background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow);}.prev-val{font-size:10px;color:var(--text3);text-align:center;height:13px;line-height:13px;font-weight:600;}
+
+.btn{border-radius:12px;padding:12px 14px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}.btn.primary{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,0.25);}.btn.dark{background:var(--navy);color:#fff;}.btn.light{background:var(--bg3);color:var(--text2);}.btn.green{background:var(--green);color:#fff;}.btn.red{background:var(--red-bg);color:var(--red);}.btn.small{padding:8px 10px;font-size:12px;border-radius:10px;}.btn.full{width:100%;}.btn-row{display:flex;gap:8px;flex-wrap:wrap;}.btn-row .btn{flex:1;min-width:110px;}
+.focus-top{display:grid;gap:10px;margin-bottom:10px;}.focus-card{background:linear-gradient(135deg,var(--navy2) 0%,var(--blue) 100%);border-radius:20px;padding:18px;color:#fff;box-shadow:0 8px 32px rgba(37,99,235,0.25);}.focus-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.65;font-weight:850;}.focus-title{font-size:26px;font-weight:900;letter-spacing:-.5px;margin-top:3px;}.focus-sub{font-size:13px;opacity:.75;font-weight:600;margin-top:3px;}.day-select{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;}.day-chip{background:#fff;color:var(--text2);border:1px solid var(--bg3);border-radius:18px;padding:8px 12px;font-size:12px;font-weight:850;white-space:nowrap;}.day-chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.session-bar{background:#fff;border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);}.session-state{font-size:12px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}.session-state.live{color:var(--green);}
+.timer-card{background:var(--navy);color:#fff;border-radius:16px;padding:14px 16px;margin:8px 0 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;}.timer-card.done{background:var(--green);}.timer-title{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.65;font-weight:850;}.timer-time{font-size:30px;font-weight:900;letter-spacing:-.5px;}.timer-controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}.timer-controls .btn{background:rgba(255,255,255,.14);color:#fff;padding:8px 10px;font-size:12px;}
+
+.ncb{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--r);padding:18px;margin-bottom:10px;color:#fff;}.ncb-title{font-size:16px;font-weight:850;margin-bottom:4px;}.ncb-sub{font-size:13px;opacity:0.78;margin-bottom:14px;line-height:1.4;}.ncb-btn{background:#fff;border-radius:var(--r-sm);color:var(--navy);font-size:14px;font-weight:850;padding:12px 20px;width:100%;}
+.pr-card-hdr,.settings-card-hdr{padding:13px 16px 11px;border-bottom:1px solid var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:8px;}.pr-ex{font-size:14px;font-weight:800;flex:1;line-height:1.3;color:var(--text);}.pr-badge{background:linear-gradient(90deg,var(--blue),var(--accent));color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:12px;white-space:nowrap;}.pr-cycles{display:flex;overflow-x:auto;scrollbar-width:none;}.pr-cyc{padding:12px 14px;text-align:center;border-right:1px solid var(--bg3);flex-shrink:0;min-width:90px;}.pr-cyc-lbl{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}.pr-1rm{font-size:19px;font-weight:900;color:var(--text2);}.pr-1rm.is-pr{color:var(--blue);}.pr-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4;}.pr-empty{font-size:13px;color:var(--text3);font-style:italic;padding:12px 16px;}
+.summary-card{padding:16px;}.summary-title{font-size:18px;font-weight:900;margin-bottom:12px;}.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.metric{background:var(--bg3);border-radius:12px;padding:12px;}.metric-label{font-size:10px;font-weight:850;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}.metric-val{font-size:20px;font-weight:900;color:var(--text);margin-top:3px;}.summary-note{margin-top:10px;background:var(--green-bg);color:#047857;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:750;line-height:1.35;}
+
+.settings-info{font-size:13px;color:var(--text2);line-height:1.4;background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,.05);}.settings-day{padding:14px 16px;border-bottom:1px solid var(--bg3);}.settings-day:last-child{border-bottom:none;}.settings-line{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}.edit-inp{height:42px;background:var(--bg3);border:1.5px solid transparent;border-radius:10px;padding:0 10px;font-size:14px;font-weight:750;color:var(--text);outline:none;width:100%;}.edit-inp:focus{border-color:var(--blue);background:#eff6ff;}.settings-ex{display:grid;grid-template-columns:1fr 66px;gap:8px;margin-top:8px;}.settings-actions{display:flex;gap:6px;grid-column:1/-1;}.settings-actions .btn{flex:1;}.add-box{display:grid;grid-template-columns:1fr 72px;gap:8px;margin-top:12px;background:var(--bg);padding:10px;border-radius:12px;}.danger-zone{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+.toast{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--green);color:#fff;font-size:13px;font-weight:850;padding:9px 22px;border-radius:20px;opacity:0;transition:all .25s;z-index:500;pointer-events:none;box-shadow:0 4px 16px rgba(16,185,129,0.3);}.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}.toast.warn{background:var(--yellow);}.toast.red{background:var(--red);}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bg3);display:flex;padding-bottom:env(safe-area-inset-bottom,0);z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0 13px;color:var(--text3);font-size:9.5px;font-weight:850;text-transform:uppercase;letter-spacing:0.4px;background:none;transition:color .15s;}.bnav-btn svg{width:22px;height:22px;stroke-width:1.8;}.bnav-btn.active{color:var(--blue);}
+.ic-leg{background:#fef2f2;}.ic-leg svg{stroke:#ef4444;}.ic-upper{background:#eff6ff;}.ic-upper svg{stroke:#3b82f6;}.ic-lower{background:#fff7ed;}.ic-lower svg{stroke:#f97316;}.ic-push{background:#faf5ff;}.ic-push svg{stroke:#8b5cf6;}.ic-pull{background:#f0fdf4;}.ic-pull svg{stroke:#22c55e;}.ic-generic{background:#eff6ff;}.ic-generic svg{stroke:#2563eb;}
+@media(max-width:370px){.set-row,.col-hdr{grid-template-columns:28px 1fr 1fr 56px;gap:5px}.set-inp{font-size:15px;padding:0 5px}.content,.pr-page,.settings-page{padding-left:12px;padding-right:12px}.hdr{padding:0 14px}.summary-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="toast" id="toast">Mentve ✓</div>
 <div id="app"></div>
 <script>
-const DAYS=[
-  {id:"hetfo",name:"Hétfő",sub:"Leg nap",ic:"ic-leg",
-   icon:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/>',
-   exercises:[
-    {name:"Hack guggolás (gumi assist)",sets:2},
-    {name:"Combhajlító",sets:2},
-    {name:"Combfeszítő",sets:2},
-    {name:"Vádli",sets:3},
-    {name:"Comb tárogatás",sets:2},
-    {name:"Hasazás",sets:3},
-  ]},
-  {id:"szerda",name:"Szerda",sub:"Felső test",ic:"ic-upper",
-   icon:'<path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke-linecap="round" stroke-linejoin="round"/>',
-   exercises:[
-    {name:"Fekvenyomás gépen",sets:2},
-    {name:"Lehúzás két kézzel gépen",sets:2},
-    {name:"Evezés szűk/széles fogással gépen",sets:2},
-    {name:"Vállból nyomás",sets:2},
-    {name:"Tricepsz letolás csigán 1 kézzel",sets:2},
-    {name:"Bicepsz gépen",sets:2},
-  ]},
-  {id:"csutortok",name:"Csütörtök",sub:"Alsó test",ic:"ic-lower",
-   icon:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/>',
-   exercises:[
-    {name:"RDL",sets:2},
-    {name:"Bolgár guggolás",sets:2},
-    {name:"Combhajlító",sets:2},
-    {name:"Vádli",sets:3},
-    {name:"Comb tárogatás",sets:2},
-    {name:"Hasazás",sets:3},
-  ]},
-  {id:"szombat",name:"Szombat",sub:"Push nap",ic:"ic-push",
-   icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"/>',
-   exercises:[
-    {name:"Fekvenyomás gépen",sets:2},
-    {name:"Vállból nyomás",sets:2},
-    {name:"Tárogatás",sets:2},
-    {name:"Oldalemelés",sets:2},
-    {name:"Tricepsz letolás csigán 1 kézzel",sets:2},
-    {name:"Tricepsz fejfölött",sets:2},
-  ]},
-  {id:"vasarnap",name:"Vasárnap",sub:"Pull nap",ic:"ic-pull",
-   icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 16 8 12 12 8"/><line x1="16" y1="12" x2="8" y2="12" stroke-linecap="round"/>',
-   exercises:[
-    {name:"Lehúzás két kézzel gépen",sets:2},
-    {name:"Evezés szűk fogással",sets:2},
-    {name:"Súlyzós bicepsz",sets:2},
-    {name:"T-rúdas evezés",sets:2},
-    {name:"Kalapács bicepsz",sets:2},
-  ]},
-];
-
-const PR_LIST=[
-  "Hack guggolás (gumi assist)","Combhajlító","Combfeszítő","Vádli","Comb tárogatás",
-  "RDL","Bolgár guggolás","Fekvenyomás gépen","Vállból nyomás","Tárogatás",
-  "Oldalemelés","Tricepsz letolás csigán 1 kézzel","Tricepsz fejfölött",
-  "Lehúzás két kézzel gépen","Evezés szűk/széles fogással gépen","Evezés szűk fogással",
-  "T-rúdas evezés","Bicepsz gépen","Kalapács bicepsz","Súlyzós bicepsz"
-];
-
+const STORAGE_KEY="edzes_v6";
+const LEGACY_KEY="edzes_v4";
 const WEEKS=["Week 1","Week 2","Week 3","Week 4"];
+const ICONS={
+  leg:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/>',
+  upper:'<path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke-linecap="round" stroke-linejoin="round"/>',
+  push:'<circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"/>',
+  pull:'<circle cx="12" cy="12" r="10"/><polyline points="12 16 8 12 12 8"/><line x1="16" y1="12" x2="8" y2="12" stroke-linecap="round"/>',
+  generic:'<path d="M4 12h16M7 8v8M17 8v8" stroke-linecap="round" stroke-linejoin="round"/>'
+};
+const DEFAULT_PROGRAM=[
+  {id:"hetfo",name:"Hétfő",sub:"Leg nap",ic:"ic-leg",iconKey:"leg",exercises:[{name:"Hack guggolás (gumi assist)",sets:2},{name:"Combhajlító",sets:2},{name:"Combfeszítő",sets:2},{name:"Vádli",sets:3},{name:"Comb tárogatás",sets:2},{name:"Hasazás",sets:3}]},
+  {id:"szerda",name:"Szerda",sub:"Felső test",ic:"ic-upper",iconKey:"upper",exercises:[{name:"Fekvenyomás gépen",sets:2},{name:"Lehúzás két kézzel gépen",sets:2},{name:"Evezés szűk/széles fogással gépen",sets:2},{name:"Vállból nyomás",sets:2},{name:"Tricepsz letolás csigán 1 kézzel",sets:2},{name:"Bicepsz gépen",sets:2}]},
+  {id:"csutortok",name:"Csütörtök",sub:"Alsó test",ic:"ic-lower",iconKey:"leg",exercises:[{name:"RDL",sets:2},{name:"Bolgár guggolás",sets:2},{name:"Combhajlító",sets:2},{name:"Vádli",sets:3},{name:"Comb tárogatás",sets:2},{name:"Hasazás",sets:3}]},
+  {id:"szombat",name:"Szombat",sub:"Push nap",ic:"ic-push",iconKey:"push",exercises:[{name:"Fekvenyomás gépen",sets:2},{name:"Vállból nyomás",sets:2},{name:"Tárogatás",sets:2},{name:"Oldalemelés",sets:2},{name:"Tricepsz letolás csigán 1 kézzel",sets:2},{name:"Tricepsz fejfölött",sets:2}]},
+  {id:"vasarnap",name:"Vasárnap",sub:"Pull nap",ic:"ic-pull",iconKey:"pull",exercises:[{name:"Lehúzás két kézzel gépen",sets:2},{name:"Evezés szűk fogással",sets:2},{name:"Súlyzós bicepsz",sets:2},{name:"T-rúdas evezés",sets:2},{name:"Kalapács bicepsz",sets:2}]}
+];
+let S={view:"mai",cycle:0,week:0,activeDayId:"",openDays:{hetfo:true},data:{},program:clone(DEFAULT_PROGRAM),workouts:[],prs:{},session:null,lastSummary:null,timer:{end:0,duration:90,label:""}};
+let toastT,timerT;
 
-let S={view:"naplo",cycle:0,week:0,openDays:{hetfo:true},data:{}};
-
+function clone(x){return JSON.parse(JSON.stringify(x));}
+function esc(v){return String(v??"").replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[m]));}
+function uid(prefix="id"){return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);}
+function todayDayId(){const map={1:"hetfo",3:"szerda",4:"csutortok",6:"szombat",0:"vasarnap"};const id=map[new Date().getDay()];return S.program.some(d=>d.id===id)?id:(S.program[0]?.id||"");}
+function getDay(id){return S.program.find(d=>d.id===id)||S.program[0];}
+function allExerciseNames(){return [...new Set(S.program.flatMap(d=>d.exercises.map(e=>e.name)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"hu"));}
+function normalizeProgram(p){return (Array.isArray(p)&&p.length?p:clone(DEFAULT_PROGRAM)).map((d,i)=>({id:d.id||uid("day"),name:d.name||"Edzésnap",sub:d.sub||"Edzés",ic:d.ic||"ic-generic",iconKey:d.iconKey||"generic",exercises:(Array.isArray(d.exercises)?d.exercises:[]).map(e=>({name:e.name||"Új gyakorlat",sets:Math.max(1,parseInt(e.sets)||1)}))}));}
 function load(){
-  try{const r=localStorage.getItem("edzes_v4");if(r){const p=JSON.parse(r);S.data=p.data||{};S.cycle=p.cycle||0;S.week=p.week||0;}}catch(e){}
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){const p=JSON.parse(raw);S={...S,...p,program:normalizeProgram(p.program),openDays:p.openDays||{},timer:p.timer||S.timer};}
+    else{
+      const old=localStorage.getItem(LEGACY_KEY);
+      if(old){const p=JSON.parse(old);S.data=p.data||{};S.cycle=p.cycle||0;S.week=p.week||0;}
+      S.program=clone(DEFAULT_PROGRAM);
+    }
+  }catch(e){console.warn(e)}
+  if(!S.activeDayId||!S.program.some(d=>d.id===S.activeDayId))S.activeDayId=todayDayId();
 }
-function save(){
-  try{localStorage.setItem("edzes_v4",JSON.stringify({data:S.data,cycle:S.cycle,week:S.week}));showToast();}catch(e){}
+function save(silent=false){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({view:S.view,cycle:S.cycle,week:S.week,activeDayId:S.activeDayId,openDays:S.openDays,data:S.data,program:S.program,workouts:S.workouts,prs:S.prs,session:S.session,lastSummary:S.lastSummary,timer:S.timer}));if(!silent)showToast("Mentve ✓");}catch(e){showToast("Nem sikerült menteni", "red");}
 }
+function showToast(msg="Mentve ✓",cls=""){const el=document.getElementById("toast");el.textContent=msg;el.className="toast show "+cls;clearTimeout(toastT);toastT=setTimeout(()=>el.className="toast",1600);}
 function gc(c,w,d,e,s){return S.data?.[c]?.[w]?.[d]?.[e]?.[s]||{};}
-function sc(c,w,d,e,s,f,v){
-  if(!S.data[c])S.data[c]={};
-  if(!S.data[c][w])S.data[c][w]={};
-  if(!S.data[c][w][d])S.data[c][w][d]={};
-  if(!S.data[c][w][d][e])S.data[c][w][d][e]={};
-  if(!S.data[c][w][d][e][s])S.data[c][w][d][e][s]={};
-  S.data[c][w][d][e][s][f]=v;
-  save();
-}
-function getPrev(c,w,d,e,s){
-  if(w>0)return gc(c,w-1,d,e,s);
-  if(c>0)return gc(c-1,3,d,e,s);
-  return{};
-}
-function epley(su,is,ri){
-  if(!su||!is)return null;
-  return(parseFloat(su)*(1+(parseFloat(is)+(parseFloat(ri)||0))/30)).toFixed(1);
-}
-function getCycleBest(ex,ci){
-  let best={suly:null,ism:null,rir:null,est:null};
-  for(let w=0;w<4;w++)for(const day of DAYS)for(const e of day.exercises){
-    if(e.name!==ex)continue;
-    for(let s=0;s<e.sets;s++){
-      const c=gc(ci,w,day.id,e.name,s);
-      if(!c.suly)continue;
-      const est=epley(c.suly,c.ism,c.rir);
-      if(!best.est||(est&&parseFloat(est)>parseFloat(best.est)))
-        best={suly:c.suly,ism:c.ism,rir:c.rir,est};
-    }
-  }
-  return best;
-}
-function getOverallPR(ex){
-  let best={est:null,ci:null};
-  const maxC=getMaxCycle();
-  for(let c=0;c<=maxC;c++){
-    const b=getCycleBest(ex,c);
-    if(b.est&&(!best.est||parseFloat(b.est)>parseFloat(best.est)))best={est:b.est,ci:c};
-  }
-  return best;
-}
-function getMaxCycle(){
-  const keys=Object.keys(S.data).map(Number);
-  return keys.length?Math.max(...keys):0;
-}
+function sc(c,w,d,e,s,f,v){if(!S.data[c])S.data[c]={};if(!S.data[c][w])S.data[c][w]={};if(!S.data[c][w][d])S.data[c][w][d]={};if(!S.data[c][w][d][e])S.data[c][w][d][e]={};if(!S.data[c][w][d][e][s])S.data[c][w][d][e][s]={};S.data[c][w][d][e][s][f]=v;save(true);showToast("Mentve ✓");}
+function getPrev(c,w,d,e,s){if(w>0)return gc(c,w-1,d,e,s);if(c>0)return gc(c-1,3,d,e,s);return{};}
+function epley(su,is,ri){const w=parseFloat(su),r=parseFloat(is),rir=parseFloat(ri)||0;if(!w||!r)return null;return +(w*(1+(r+rir)/30)).toFixed(1);}
+function setVolume(cell){const w=parseFloat(cell.suly),r=parseFloat(cell.ism);return (w&&r)?w*r:0;}
+function getMaxCycle(){const keys=Object.keys(S.data||{}).map(Number).filter(n=>!Number.isNaN(n));return keys.length?Math.max(...keys,S.cycle):S.cycle;}
+function getExerciseCountInData(name,ci){let best={suly:null,ism:null,rir:null,est:null};for(let w=0;w<4;w++)for(const day of S.program)for(const e of day.exercises){if(e.name!==name)continue;for(let s=0;s<e.sets;s++){const c=gc(ci,w,day.id,e.name,s);const est=epley(c.suly,c.ism,c.rir);if(est&&(!best.est||est>best.est))best={suly:c.suly,ism:c.ism,rir:c.rir,est};}}return best;}
+function getOverallPR(ex){let best={est:null,ci:null};const maxC=getMaxCycle();for(let c=0;c<=maxC;c++){const b=getExerciseCountInData(ex,c);if(b.est&&(!best.est||b.est>best.est))best={est:b.est,ci:c};}return best;}
+function getCurrentWorkoutSets(day){const rows=[];day.exercises.forEach(ex=>{for(let s=0;s<ex.sets;s++){const c=gc(S.cycle,S.week,day.id,ex.name,s);if(c.suly||c.ism||c.rir)rows.push({exercise:ex.name,set:s+1,suly:c.suly||"",ism:c.ism||"",rir:c.rir||"",volume:setVolume(c),est:epley(c.suly,c.ism,c.rir)});}});return rows;}
+function summarizeWorkout(day){const rows=getCurrentWorkoutSets(day);const totalSets=rows.filter(r=>r.suly&&r.ism).length;const totalReps=rows.reduce((a,r)=>a+(parseFloat(r.ism)||0),0);const volume=rows.reduce((a,r)=>a+r.volume,0);const best=rows.filter(r=>r.est).sort((a,b)=>b.est-a.est)[0]||null;const prev=[...S.workouts].reverse().find(w=>w.dayId===day.id&&!(S.session&&w.id===S.session.id));const prevVolume=prev?.summary?.volume||0;const change=prevVolume?((volume-prevVolume)/prevVolume*100):null;let newPr=false;if(best){const old=S.prs[best.exercise]||0;if(best.est>old){newPr=true;S.prs[best.exercise]=best.est;}}return {dayId:day.id,dayName:day.name,date:new Date().toISOString(),cycle:S.cycle,week:S.week,totalSets,totalReps,volume:+volume.toFixed(1),best,newPr,prevVolume,change:change===null?null:+change.toFixed(1)};}
+function startSession(){const day=getDay(S.activeDayId);S.session={id:uid("workout"),dayId:day.id,startedAt:new Date().toISOString(),cycle:S.cycle,week:S.week};S.lastSummary=null;save();render();}
+function finishSession(){const day=getDay(S.session?.dayId||S.activeDayId);const summary=summarizeWorkout(day);S.workouts.push({id:S.session?.id||uid("workout"),dayId:day.id,startedAt:S.session?.startedAt||new Date().toISOString(),finishedAt:new Date().toISOString(),cycle:S.cycle,week:S.week,summary,sets:getCurrentWorkoutSets(day)});S.session=null;S.lastSummary=summary;save();render();showToast("Edzés lezárva ✓");}
+function startTimer(sec,label){S.timer={end:Date.now()+sec*1000,duration:sec,label};save(true);renderTimer();}
+function stopTimer(){S.timer={end:0,duration:90,label:""};save(true);renderTimer();}
+function fmtTime(ms){const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,"0");const s=String(total%60).padStart(2,"0");return `${m}:${s}`;}
+function renderTimer(){const el=document.getElementById("timer-time");const card=document.getElementById("timer-card");if(!el||!card)return;const left=(S.timer.end||0)-Date.now();el.textContent=fmtTime(left);card.classList.toggle("done",S.timer.end&&left<=0);if(S.timer.end&&left<=0)el.textContent="KÉSZ";}
+function scheduleTimer(){clearInterval(timerT);timerT=setInterval(renderTimer,500);}
 
-let toastT;
-function showToast(){
-  const el=document.getElementById("toast");
-  el.classList.add("show");
-  clearTimeout(toastT);
-  toastT=setTimeout(()=>el.classList.remove("show"),1600);
-}
-
-function render(){document.getElementById("app").innerHTML=buildApp();attach();}
-
-function buildApp(){
-  return buildHdr()+(S.view==="naplo"?buildNaplo():buildStat())+buildBnav();
-}
-
-function buildHdr(){
-  const maxC=getMaxCycle();
-  // Always show at least C1..C(maxC+1) — the "next" cycle only if we actually started it
-  const numCycles=maxC+1;
-  const cycleTabs=Array.from({length:numCycles},(_,i)=>
-    `<button class="tab ${i===S.cycle?'active':''}" data-type="cycle" data-idx="${i}">C${i+1}</button>`
-  ).join("");
-  const weekTabs=WEEKS.map((w,i)=>
-    `<button class="tab ${i===S.week?'active':''}" data-type="week" data-idx="${i}">${w}</button>`
-  ).join("");
-
-  if(S.view==="statisztika"){
-    return`<div class="hdr">
-      <div class="hdr-top">
-        <div class="logo">Edző<em>Napló</em></div>
-        <div class="hdr-sub">Statisztika & PR</div>
-      </div>
-    </div>`;
-  }
-  return`<div class="hdr">
-    <div class="hdr-top">
-      <div class="logo">Edző<em>Napló</em></div>
-    </div>
-    <div class="tab-section">
-      <div class="tab-label">Ciklus</div>
-      <div class="tab-row">${cycleTabs}</div>
-    </div>
-    <div class="tab-section">
-      <div class="tab-label">Hét</div>
-      <div class="tab-row">${weekTabs}</div>
-    </div>
-  </div>`;
-}
-
-function buildNaplo(){
-  const isLast=S.week===3&&S.cycle===getMaxCycle();
-  const banner=isLast?`<div class="ncb">
-    <div class="ncb-title">Ciklus vége közeleg 🏁</div>
-    <div class="ncb-sub">Ha lezártad ezt a ciklust, indíts egy újat. Az eddigi adatok megmaradnak.</div>
-    <button class="ncb-btn" id="ncb-btn">Új ciklus indítása →</button>
-  </div>`:'';
-
-  const heroDay=DAYS.find(d=>S.openDays[d.id])||DAYS[0];
-  const hero=`<div class="hero-wrap">
-    <div class="hero-card">
-      <div class="hero-label">Aktív edzés</div>
-      <div class="hero-week">C${S.cycle+1} – ${WEEKS[S.week]}</div>
-      <div class="hero-cycle">Ciklus ${S.cycle+1}, ${WEEKS[S.week]}</div>
-      <div class="hero-pills">
-        ${DAYS.map(d=>`<div class="hero-pill">${d.sub}</div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-
-  return`<div class="content">${hero}<div class="section-title">Edzésnapló</div>${banner}${DAYS.map(d=>buildDay(d)).join('')}</div>`;
-}
-
-function buildDay(day){
-  const isOpen=S.openDays[day.id];
-  return`<div class="day-card ${isOpen?'open':''}" id="day-${day.id}">
-    <div class="day-hdr" data-day="${day.id}">
-      <div class="day-icon-wrap ${day.ic}">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" xmlns="http://www.w3.org/2000/svg">${day.icon}</svg>
-      </div>
-      <div class="day-info">
-        <div class="day-name">${day.name}</div>
-        <div class="day-sub">${day.sub} · ${day.exercises.length} gyakorlat</div>
-      </div>
-      <div class="day-chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>
-    <div class="day-exlist">${day.exercises.map(ex=>buildEx(ex,day.id)).join('')}</div>
-  </div>`;
-}
-
-function buildEx(ex,dayId){
-  const rows=[];
-  for(let s=0;s<ex.sets;s++){
-    const cell=gc(S.cycle,S.week,dayId,ex.name,s);
-    const prev=getPrev(S.cycle,S.week,dayId,ex.name,s);
-    const pS=prev.suly?`${prev.suly}kg`:'–';
-    const pI=prev.ism?`×${prev.ism}`:'';
-    const pR=prev.rir!==undefined&&prev.rir!==''?`@${prev.rir}`:'';
-    rows.push(`<div class="set-row">
-      <div class="set-lbl">S${s+1}</div>
-      <div class="inp-wrap">
-        <input class="set-inp" type="number" inputmode="decimal" placeholder="kg"
-          value="${cell.suly||''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="suly">
-        <div class="prev-val">${pS}</div>
-      </div>
-      <div class="inp-wrap">
-        <input class="set-inp" type="number" inputmode="numeric" placeholder="ism"
-          value="${cell.ism||''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="ism">
-        <div class="prev-val">${pI||'–'}</div>
-      </div>
-      <div class="inp-wrap">
-        <input class="set-inp rir" type="number" inputmode="numeric" placeholder="RIR"
-          value="${cell.rir!==undefined&&cell.rir!==''?cell.rir:''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="rir">
-        <div class="prev-val">${pR||'–'}</div>
-      </div>
-    </div>`);
-  }
-  return`<div class="ex-block">
-    <div class="ex-name">${ex.name}</div>
-    <div class="col-hdr">
-      <div></div>
-      <div class="col-h">Súly kg</div>
-      <div class="col-h">Ismétlés</div>
-      <div class="col-h">RIR</div>
-    </div>
-    ${rows.join('')}
-  </div>`;
-}
-
-function buildStat(){
-  const maxC=getMaxCycle();
-  const cards=PR_LIST.map(exName=>{
-    let hasAny=false;
-    const pr=getOverallPR(exName);
-    const cols=[];
-    for(let c=0;c<=maxC;c++){
-      const b=getCycleBest(exName,c);
-      if(b.suly)hasAny=true;
-      const isPR=pr.ci===c&&b.est;
-      cols.push(`<div class="pr-cyc">
-        <div class="pr-cyc-lbl">C${c+1}${isPR?' 🏆':''}</div>
-        <div class="pr-1rm ${isPR?'is-pr':''}">${b.est?b.est+'kg':'–'}</div>
-        <div class="pr-sub">${b.suly?b.suly+'kg':''}${b.ism?` ×${b.ism}`:''}${b.rir!==undefined&&b.rir!==''&&b.rir!==null?' @'+b.rir:''}</div>
-      </div>`);
-    }
-    const badge=pr.est?`<div class="pr-badge">PR ~${pr.est}kg</div>`:'';
-    return`<div class="pr-card">
-      <div class="pr-card-hdr">
-        <div class="pr-ex">${exName}</div>${badge}
-      </div>
-      ${hasAny?`<div class="pr-cycles">${cols.join('')}</div>`:`<div class="pr-empty">Még nincs adat</div>`}
-    </div>`;
-  });
-  return`<div class="pr-page"><div class="section-title" style="margin-top:0">Személyes rekordok</div>${cards.join('')}</div>`;
-}
-
-function buildBnav(){
-  return`<nav class="bnav">
-    <button class="bnav-btn ${S.view==='naplo'?'active':''}" data-view="naplo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12h6M9 16h4" stroke-linecap="round"/></svg>
-      Napló
-    </button>
-    <button class="bnav-btn ${S.view==='statisztika'?'active':''}" data-view="statisztika">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Statisztika
-    </button>
-  </nav>`;
-}
-
+function render(){document.getElementById("app").innerHTML=buildApp();attach();scheduleTimer();renderTimer();}
+function buildApp(){return buildHdr()+({mai:buildMai,naplo:buildNaplo,statisztika:buildStat,edzesterv:buildSettings}[S.view]||buildMai)()+buildBnav();}
+function buildHdr(){const maxC=getMaxCycle();const cycleTabs=Array.from({length:maxC+1},(_,i)=>`<button class="tab ${i===S.cycle?'active':''}" data-type="cycle" data-idx="${i}">C${i+1}</button>`).join("");const weekTabs=WEEKS.map((w,i)=>`<button class="tab ${i===S.week?'active':''}" data-type="week" data-idx="${i}">${w}</button>`).join("");const sub={mai:"Mai edzés",naplo:"Napló",statisztika:"Statisztika & PR",edzesterv:"Edzésterv beállítás"}[S.view];if(S.view==="statisztika"||S.view==="edzesterv")return `<div class="hdr"><div class="hdr-top"><div class="logo">Edző<em>Napló</em></div><div class="hdr-sub">${sub}</div></div></div>`;return `<div class="hdr"><div class="hdr-top"><div class="logo">Edző<em>Napló</em></div><div class="hdr-sub">${sub}</div></div><div class="tab-section"><div class="tab-label">Ciklus</div><div class="tab-row">${cycleTabs}</div></div><div class="tab-section"><div class="tab-label">Hét</div><div class="tab-row">${weekTabs}</div></div></div>`;}
+function iconSvg(day){return `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" xmlns="http://www.w3.org/2000/svg">${ICONS[day.iconKey]||ICONS.generic}</svg>`;}
+function dayChips(){return `<div class="day-select">${S.program.map(d=>`<button class="day-chip ${d.id===S.activeDayId?'active':''}" data-day-select="${esc(d.id)}">${esc(d.name)}</button>`).join("")}</div>`;}
+function buildMai(){const day=getDay(S.activeDayId);const active=S.session&&S.session.dayId===day.id;return `<div class="content"><div class="focus-top"><div class="focus-card"><div class="focus-label">Mai fókusz</div><div class="focus-title">${esc(day.name)}</div><div class="focus-sub">${esc(day.sub)} · C${S.cycle+1}, ${WEEKS[S.week]}</div></div>${dayChips()}</div>${buildSessionBar(active,day)}${buildTimer()}<div class="section-title">Rögzítés</div><div class="day-card open"><div class="day-hdr"><div class="day-icon-wrap ${day.ic}">${iconSvg(day)}</div><div class="day-info"><div class="day-name">${esc(day.name)}</div><div class="day-sub">${esc(day.sub)} · ${day.exercises.length} gyakorlat</div></div></div><div class="day-exlist">${day.exercises.map(ex=>buildEx(ex,day.id,true)).join("")}</div></div>${S.lastSummary?buildSummary(S.lastSummary):""}</div>`;}
+function buildSessionBar(active,day){const anyOther=S.session&&!active;return `<div class="session-bar"><div class="session-state ${active?'live':''}">${active?'Edzés folyamatban':anyOther?'Másik edzés van folyamatban':'Nincs elindított edzés'}</div><div class="btn-row">${active?`<button class="btn green" id="finish-workout">Edzés befejezése</button>`:`<button class="btn primary" id="start-workout" ${anyOther?'disabled':''}>Edzés indítása</button>`}<button class="btn light" data-view-jump="naplo">Heti napló</button></div></div>`;}
+function buildTimer(){const running=S.timer.end&&S.timer.end>Date.now();return `<div class="timer-card" id="timer-card"><div><div class="timer-title">Pihenőidő ${S.timer.label?`· ${esc(S.timer.label)}`:""}</div><div class="timer-time" id="timer-time">${running?fmtTime(S.timer.end-Date.now()):"00:00"}</div></div><div class="timer-controls"><button class="btn" data-timer="60">60</button><button class="btn" data-timer="90">90</button><button class="btn" data-timer="120">120</button><button class="btn" data-timer="180">180</button><button class="btn" id="stop-timer">Stop</button></div></div>`;}
+function buildSummary(s){return `<div class="summary-card"><div class="summary-title">Utolsó edzés összegzés</div><div class="summary-grid"><div class="metric"><div class="metric-label">Szett</div><div class="metric-val">${s.totalSets}</div></div><div class="metric"><div class="metric-label">Ismétlés</div><div class="metric-val">${s.totalReps}</div></div><div class="metric"><div class="metric-label">Volumen</div><div class="metric-val">${s.volume} kg</div></div><div class="metric"><div class="metric-label">Változás</div><div class="metric-val">${s.change===null?'–':(s.change>0?'+':'')+s.change+'%'}</div></div></div><div class="summary-note">${s.best?`Legjobb szett: ${esc(s.best.exercise)} · ${esc(s.best.suly)}kg ×${esc(s.best.ism)} @${esc(s.best.rir||0)} · ~${s.best.est}kg 1RM`:'Nincs értékelhető szett.'}${s.newPr?' 🏆 Új PR!':''}</div></div>`;}
+function buildNaplo(){const isLast=S.week===3&&S.cycle===getMaxCycle();const banner=isLast?`<div class="ncb"><div class="ncb-title">Ciklus vége közeleg 🏁</div><div class="ncb-sub">Ha lezártad ezt a ciklust, indíts egy újat. Az eddigi adatok megmaradnak.</div><button class="ncb-btn" id="ncb-btn">Új ciklus indítása →</button></div>`:"";return `<div class="hero-wrap"><div class="hero-card"><div class="hero-label">Heti napló</div><div class="hero-week">C${S.cycle+1} – ${WEEKS[S.week]}</div><div class="hero-cycle">Teljes heti áttekintés</div><div class="hero-pills">${S.program.map(d=>`<div class="hero-pill ${S.openDays[d.id]?'active':''}">${esc(d.sub)}</div>`).join("")}</div></div></div><div class="content"><div class="section-title">Edzésnapló</div>${banner}${S.program.map(d=>buildDay(d)).join("")}</div>`;}
+function buildDay(day){const isOpen=!!S.openDays[day.id];return `<div class="day-card ${isOpen?'open':''}" id="day-${esc(day.id)}"><div class="day-hdr" data-day="${esc(day.id)}"><div class="day-icon-wrap ${day.ic}">${iconSvg(day)}</div><div class="day-info"><div class="day-name">${esc(day.name)}</div><div class="day-sub">${esc(day.sub)} · ${day.exercises.length} gyakorlat</div></div><div class="day-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="day-exlist">${day.exercises.map(ex=>buildEx(ex,day.id,false)).join("")}</div></div>`;}
+function buildEx(ex,dayId,focus){let rows="";for(let s=0;s<ex.sets;s++){const cell=gc(S.cycle,S.week,dayId,ex.name,s);const prev=getPrev(S.cycle,S.week,dayId,ex.name,s);rows+=`<div class="set-row"><div class="set-lbl">S${s+1}</div><div class="inp-wrap"><input class="set-inp" type="number" inputmode="decimal" placeholder="kg" value="${esc(cell.suly||'')}" data-day="${esc(dayId)}" data-ex="${esc(ex.name)}" data-set="${s}" data-field="suly"><div class="prev-val">${prev.suly?esc(prev.suly)+'kg':'–'}</div></div><div class="inp-wrap"><input class="set-inp" type="number" inputmode="numeric" placeholder="ism" value="${esc(cell.ism||'')}" data-day="${esc(dayId)}" data-ex="${esc(ex.name)}" data-set="${s}" data-field="ism"><div class="prev-val">${prev.ism?'×'+esc(prev.ism):'–'}</div></div><div class="inp-wrap"><input class="set-inp rir" type="number" inputmode="numeric" placeholder="RIR" value="${cell.rir!==undefined&&cell.rir!==''?esc(cell.rir):''}" data-day="${esc(dayId)}" data-ex="${esc(ex.name)}" data-set="${s}" data-field="rir"><div class="prev-val">${prev.rir!==undefined&&prev.rir!==''?'@'+esc(prev.rir):'–'}</div></div></div>`;}return `<div class="ex-block"><div class="ex-top"><div class="ex-name">${esc(ex.name)}</div>${focus?`<button class="btn small light" data-rest-label="${esc(ex.name)}">Pihenő</button>`:""}</div><div class="col-hdr"><div></div><div class="col-h">Súly kg</div><div class="col-h">Ismétlés</div><div class="col-h">RIR</div></div>${rows}</div>`;}
+function buildStat(){const names=allExerciseNames();const maxC=getMaxCycle();return `<div class="pr-page"><div class="section-title" style="margin-top:0">Személyes rekordok</div>${S.workouts.length?`<div class="summary-card"><div class="summary-title">Lezárt edzések: ${S.workouts.length}</div><div class="summary-note">Legutóbbi: ${esc(S.workouts[S.workouts.length-1].summary.dayName)} · ${new Date(S.workouts[S.workouts.length-1].finishedAt).toLocaleString('hu-HU')}</div></div>`:""}${names.map(exName=>{let hasAny=false;const pr=getOverallPR(exName);let cols="";for(let c=0;c<=maxC;c++){const b=getExerciseCountInData(exName,c);if(b.suly)hasAny=true;const isPR=pr.ci===c&&b.est;cols+=`<div class="pr-cyc"><div class="pr-cyc-lbl">C${c+1}${isPR?' 🏆':''}</div><div class="pr-1rm ${isPR?'is-pr':''}">${b.est?b.est+'kg':'–'}</div><div class="pr-sub">${b.suly?esc(b.suly)+'kg':''}${b.ism?` ×${esc(b.ism)}`:''}${b.rir!==undefined&&b.rir!==''&&b.rir!==null?' @'+esc(b.rir):''}</div></div>`;}return `<div class="pr-card"><div class="pr-card-hdr"><div class="pr-ex">${esc(exName)}</div>${pr.est?`<div class="pr-badge">PR ~${pr.est}kg</div>`:""}</div>${hasAny?`<div class="pr-cycles">${cols}</div>`:`<div class="pr-empty">Még nincs adat</div>`}</div>`;}).join("")}</div>`;}
+function buildSettings(){return `<div class="settings-page"><div class="settings-info"><strong>Edzésterv szerkesztés.</strong> Ezek a beállítások külön vannak választva a rögzítéstől, hogy edzés közben ne legyen felesleges zaj.</div><div class="settings-card"><div class="settings-card-hdr"><div class="pr-ex">Edzésnapok és gyakorlatok</div><button class="btn small primary" id="add-day">+ Nap</button></div>${S.program.map((d,di)=>buildSettingsDay(d,di)).join("")}</div><div class="danger-zone"><div class="section-title" style="margin-top:0">Veszélyes zóna</div><button class="btn red full" id="reset-program">Edzésterv visszaállítása alapra</button></div></div>`;}
+function buildSettingsDay(d,di){return `<div class="settings-day"><div class="settings-line"><input class="edit-inp" value="${esc(d.name)}" data-edit-day="${di}" data-field="name" placeholder="Nap neve"><input class="edit-inp" value="${esc(d.sub)}" data-edit-day="${di}" data-field="sub" placeholder="Alcím"></div><div class="btn-row"><button class="btn small light" data-move-day="${di}" data-dir="-1">↑ Nap</button><button class="btn small light" data-move-day="${di}" data-dir="1">↓ Nap</button><button class="btn small red" data-del-day="${di}">Törlés</button></div>${d.exercises.map((e,ei)=>`<div class="settings-ex"><input class="edit-inp" value="${esc(e.name)}" data-edit-ex="${di}:${ei}" data-field="name" placeholder="Gyakorlat"><input class="edit-inp" type="number" inputmode="numeric" value="${esc(e.sets)}" data-edit-ex="${di}:${ei}" data-field="sets" placeholder="Szett"><div class="settings-actions"><button class="btn small light" data-move-ex="${di}:${ei}" data-dir="-1">↑</button><button class="btn small light" data-move-ex="${di}:${ei}" data-dir="1">↓</button><button class="btn small red" data-del-ex="${di}:${ei}">Törlés</button></div></div>`).join("")}<div class="add-box"><input class="edit-inp" data-new-ex="${di}" placeholder="Új gyakorlat neve"><button class="btn primary" data-add-ex="${di}">Hozzáad</button></div></div>`;}
+function buildBnav(){const item=(v,label,svg)=>`<button class="bnav-btn ${S.view===v?'active':''}" data-view="${v}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${svg}</svg>${label}</button>`;return `<nav class="bnav">${item('mai','Mai','<path d="M8 2v4M16 2v4M4 9h16M6 5h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"/>')}${item('naplo','Napló','<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 12h6M9 16h4" stroke-linecap="round" stroke-linejoin="round"/>')}${item('statisztika','Stat','<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/>')}${item('edzesterv','Terv','<path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/>')}</nav>`;}
+function move(arr,i,dir){const j=i+dir;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];}
 function attach(){
-  document.querySelectorAll("[data-type='cycle']").forEach(b=>b.addEventListener("click",()=>{S.cycle=+b.dataset.idx;render();}));
-  document.querySelectorAll("[data-type='week']").forEach(b=>b.addEventListener("click",()=>{S.week=+b.dataset.idx;render();}));
-  document.querySelectorAll(".day-hdr").forEach(h=>h.addEventListener("click",()=>{
-    const id=h.dataset.day;
-    S.openDays[id]=!S.openDays[id];
-    document.getElementById("day-"+id).classList.toggle("open",S.openDays[id]);
-  }));
-  document.querySelectorAll(".set-inp").forEach(inp=>{
-    const handler=()=>{const{day,ex,set,field}=inp.dataset;sc(S.cycle,S.week,day,ex,+set,field,inp.value);};
-    inp.addEventListener("change",handler);
-    inp.addEventListener("blur",handler);
-  });
-  document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{S.view=b.dataset.view;render();}));
-  const ncb=document.getElementById("ncb-btn");
-  if(ncb)ncb.addEventListener("click",()=>{
-    S.cycle=getMaxCycle()+1;S.week=0;render();
-  });
+  document.querySelectorAll("[data-type='cycle']").forEach(b=>b.onclick=()=>{S.cycle=+b.dataset.idx;save(true);render();});
+  document.querySelectorAll("[data-type='week']").forEach(b=>b.onclick=()=>{S.week=+b.dataset.idx;save(true);render();});
+  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{S.view=b.dataset.view;save(true);render();});
+  document.querySelectorAll("[data-view-jump]").forEach(b=>b.onclick=()=>{S.view=b.dataset.viewJump;save(true);render();});
+  document.querySelectorAll("[data-day-select]").forEach(b=>b.onclick=()=>{S.activeDayId=b.dataset.daySelect;save(true);render();});
+  document.querySelectorAll(".day-hdr[data-day]").forEach(h=>h.onclick=()=>{const id=h.dataset.day;S.openDays[id]=!S.openDays[id];save(true);render();});
+  document.querySelectorAll(".set-inp").forEach(inp=>{const handler=()=>{const{day,ex,set,field}=inp.dataset;sc(S.cycle,S.week,day,ex,+set,field,inp.value);};inp.addEventListener("change",handler);inp.addEventListener("blur",handler);});
+  document.getElementById("start-workout")?.addEventListener("click",startSession);document.getElementById("finish-workout")?.addEventListener("click",finishSession);
+  document.querySelectorAll("[data-timer]").forEach(b=>b.onclick=()=>startTimer(+b.dataset.timer,S.timer.label||"pihenő"));document.querySelectorAll("[data-rest-label]").forEach(b=>b.onclick=()=>startTimer(S.timer.duration||90,b.dataset.restLabel));document.getElementById("stop-timer")?.addEventListener("click",stopTimer);
+  document.getElementById("ncb-btn")?.addEventListener("click",()=>{S.cycle=getMaxCycle()+1;S.week=0;S.view="mai";save();render();});
+  document.getElementById("add-day")?.addEventListener("click",()=>{const id=uid("nap");S.program.push({id,name:"Új nap",sub:"Edzés",ic:"ic-generic",iconKey:"generic",exercises:[]});S.activeDayId=id;save();render();});
+  document.getElementById("reset-program")?.addEventListener("click",()=>{if(confirm("Biztosan visszaállítod az alap edzéstervet? A rögzített edzésadatok megmaradnak.")){S.program=clone(DEFAULT_PROGRAM);S.activeDayId=todayDayId();save();render();}});
+  document.querySelectorAll("[data-edit-day]").forEach(inp=>inp.onchange=()=>{const d=S.program[+inp.dataset.editDay];if(d){d[inp.dataset.field]=inp.value.trim()||d[inp.dataset.field];save();render();}});
+  document.querySelectorAll("[data-move-day]").forEach(b=>b.onclick=()=>{move(S.program,+b.dataset.moveDay,+b.dataset.dir);save();render();});
+  document.querySelectorAll("[data-del-day]").forEach(b=>b.onclick=()=>{if(S.program.length<=1)return showToast("Legalább egy nap kell","warn");if(confirm("Törlöd ezt az edzésnapot?")){S.program.splice(+b.dataset.delDay,1);S.activeDayId=S.program[0].id;save();render();}});
+  document.querySelectorAll("[data-edit-ex]").forEach(inp=>inp.onchange=()=>{const[di,ei]=inp.dataset.editEx.split(":").map(Number);const e=S.program[di]?.exercises[ei];if(!e)return;if(inp.dataset.field==="sets")e.sets=Math.max(1,parseInt(inp.value)||1);else e.name=inp.value.trim()||e.name;save();render();});
+  document.querySelectorAll("[data-move-ex]").forEach(b=>b.onclick=()=>{const[di,ei]=b.dataset.moveEx.split(":").map(Number);move(S.program[di].exercises,ei,+b.dataset.dir);save();render();});
+  document.querySelectorAll("[data-del-ex]").forEach(b=>b.onclick=()=>{const[di,ei]=b.dataset.delEx.split(":").map(Number);if(confirm("Törlöd ezt a gyakorlatot?")){S.program[di].exercises.splice(ei,1);save();render();}});
+  document.querySelectorAll("[data-add-ex]").forEach(b=>b.onclick=()=>{const di=+b.dataset.addEx;const inp=document.querySelector(`[data-new-ex="${di}"]`);const name=(inp?.value||"").trim();if(!name)return showToast("Adj meg gyakorlatnevet","warn");S.program[di].exercises.push({name,sets:2});save();render();});
 }
-
 load();render();
 </script>
 </body>
