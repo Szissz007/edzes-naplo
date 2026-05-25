@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Edzésnapló v7 iPhone timer</title>
+<title>Edzésnapló v8 clean timer</title>
 <style>
 :root{
   --navy:#1a2d5a;--navy2:#213570;--navy3:#2a4090;--blue:#2563eb;--blue2:#3b7fff;--accent:#4f9cff;--accent2:#7bb8ff;
@@ -120,6 +120,30 @@ input[type=number]{-moz-appearance:textfield;}
 .rest-btn{min-width:78px;}
 @supports (-webkit-touch-callout:none){.ex-block.active-timer .ex-top{top:0}.floating-timer{bottom:calc(82px + env(safe-area-inset-bottom,0));}}
 @media(max-width:370px){.floating-timer{left:10px;right:10px}.ex-timer-pill{font-size:13px;padding:7px 8px}.rest-btn{min-width:70px}}
+
+/* v3 fix: iPhone first-exercise overlap cleanup.
+   The exercise header must NOT stick under the large sticky page header;
+   the floating timer already provides persistent visibility. */
+.ex-block{padding-top:16px!important;}
+.ex-block .ex-top,
+.ex-block.active-timer .ex-top{
+  position:relative!important;
+  top:auto!important;
+  z-index:2!important;
+  margin:0 0 10px 0!important;
+  padding:0!important;
+  background:transparent!important;
+  border-bottom:0!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.ex-block:first-child{padding-top:18px!important;}
+.day-exlist{overflow:visible;}
+@media(max-width:520px){
+  .ex-block{padding-top:16px!important;}
+  .ex-block .ex-top,
+  .ex-block.active-timer .ex-top{margin:0 0 10px 0!important;padding:0!important;}
+}
 
 </style>
 </head>
