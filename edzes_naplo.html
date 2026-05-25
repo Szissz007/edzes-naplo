@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Edzésnapló</title>
+<style>
+  :root {
+    --bg: #0f0f11;
+    --bg2: #1a1a1f;
+    --bg3: #222228;
+    --bg4: #2a2a32;
+    --accent: #c8f135;
+    --accent2: #a8d420;
+    --text: #f0f0f0;
+    --text2: #999;
+    --text3: #666;
+    --red: #ff4d4d;
+    --blue: #4da6ff;
+    --orange: #ff9500;
+    --green: #30d158;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  /* HEADER */
+  .app-header {
+    background: var(--bg2);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .app-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .app-title span { color: var(--accent); }
+  .header-btn {
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    font-size: 13px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .header-btn:active { transform: scale(0.96); background: var(--bg4); }
+
+  /* CYCLE + WEEK TABS */
+  .tab-row {
+    display: flex;
+    gap: 6px;
+    padding: 10px 0 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-row::-webkit-scrollbar { display: none; }
+  .tab {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #111;
+  }
+  .tab:active { transform: scale(0.96); }
+
+  /* WORKOUT DAY CARDS */
+  .content { padding: 12px 14px 100px; }
+  .day-block { margin-bottom: 12px; }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border-radius: var(--radius) var(--radius) 0 0;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-bottom: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .day-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .day-name { font-size: 15px; font-weight: 600; flex: 1; }
+  .day-chevron {
+    color: var(--text3);
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+  .day-block.open .day-chevron { transform: rotate(180deg); }
+  .day-block.open .day-header { border-radius: var(--radius) var(--radius) 0 0; }
+  .day-exercises {
+    display: none;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding-bottom: 4px;
+  }
+  .day-block.open .day-exercises { display: block; }
+
+  /* EXERCISE ROW */
+  .exercise-block {
+    padding: 12px 16px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .exercise-block:last-child { border-bottom: none; }
+  .ex-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  /* SET ROW */
+  .set-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr 72px;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .set-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text3);
+    text-align: center;
+    background: var(--bg3);
+    border-radius: 6px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .set-input {
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+    height: 42px;
+    padding: 0 10px;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    transition: border-color 0.15s;
+  }
+  .set-input:focus { border-color: var(--accent); }
+  .set-input::placeholder { color: var(--text3); font-size: 14px; }
+  .set-input.rir-input {
+    background: rgba(250, 204, 21, 0.08);
+    border-color: rgba(250, 204, 21, 0.2);
+    color: #facc15;
+  }
+  .set-input.rir-input:focus { border-color: #facc15; }
+  .col-headers {
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr 72px;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .col-h {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* STAT SHEET (PR page) */
+  .pr-page { padding: 12px 14px 100px; }
+  .pr-card {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .pr-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .pr-ex-name { font-size: 14px; font-weight: 600; }
+  .pr-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .pr-cycle {
+    padding: 10px 12px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+  }
+  .pr-cycle:last-child { border-right: none; }
+  .pr-cycle-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .pr-1rm { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .pr-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .pr-badge {
+    display: inline-block;
+    background: rgba(200, 241, 53, 0.12);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .pr-badge.red { background: rgba(255,77,77,0.12); color: var(--red); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg2);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    z-index: 200;
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 0 12px;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    transition: color 0.15s;
+    border: none;
+    background: none;
+  }
+  .nav-btn svg { width: 22px; height: 22px; stroke-width: 1.8; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn:active { opacity: 0.7; }
+
+  /* SAVE INDICATOR */
+  .save-toast {
+    position: fixed;
+    top: 70px; left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: var(--accent);
+    color: #111;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 300;
+    pointer-events: none;
+  }
+  .save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .empty-pr { color: var(--text3); font-size: 13px; padding: 10px 16px; font-style: italic; }
+
+  /* Color dots per day */
+  .dot-leg { background: #ff6b6b; }
+  .dot-upper { background: var(--blue); }
+  .dot-lower { background: var(--orange); }
+  .dot-push { background: #bf5af2; }
+  .dot-pull { background: var(--green); }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  input[type=number] { -moz-appearance: textfield; }
+</style>
+</head>
+<body>
+
+<div class="save-toast" id="toast">Mentve ✓</div>
+
+<div id="app"></div>
+
+<script>
+const PROGRAM = {
+  cycles: ["Ciklus 1", "Ciklus 2", "Ciklus 3"],
+  weeks: ["Week 1", "Week 2", "Week 3", "Week 4"],
+  days: [
+    {
+      id: "hetfo", name: "Hétfő – Leg", dot: "dot-leg",
+      exercises: [
+        { name: "Hack guggolás (gumi assist)", sets: 2 },
+        { name: "Combhajlító", sets: 2 },
+        { name: "Combfeszítő", sets: 2 },
+        { name: "Vádli", sets: 3 },
+        { name: "Comb tárogatás", sets: 2 },
+        { name: "Hasazás", sets: 3 },
+      ]
+    },
+    {
+      id: "szerda", name: "Szerda – Felső test", dot: "dot-upper",
+      exercises: [
+        { name: "Fekvenyomás gépen", sets: 2 },
+        { name: "Lehúzás két kézzel gépen", sets: 2 },
+        { name: "Evezés szűk fogással gépen", sets: 2, cycleVariant: { 2: "Evezés széles fogással gépen", 3: "Evezés széles fogással gépen" } },
+        { name: "Vállból nyomás", sets: 2 },
+        { name: "Tricepsz letolás csigán 1 kézzel", sets: 2 },
+        { name: "Bicepsz gépen", sets: 2 },
+      ]
+    },
+    {
+      id: "csutortok", name: "Csütörtök – Alsó test", dot: "dot-lower",
+      exercises: [
+        { name: "RDL", sets: 2 },
+        { name: "Bolgár guggolás", sets: 2 },
+        { name: "Combhajlító", sets: 2 },
+        { name: "Vádli", sets: 3 },
+        { name: "Comb tárogatás", sets: 2 },
+        { name: "Hasazás", sets: 3 },
+      ]
+    },
+    {
+      id: "szombat", name: "Szombat – Push", dot: "dot-push",
+      exercises: [
+        { name: "Fekvenyomás gépen", sets: 2 },
+        { name: "Vállból nyomás", sets: 2 },
+        { name: "Tárogatás", sets: 2 },
+        { name: "Oldalemelés", sets: 2 },
+        { name: "Tricepsz letolás csigán 1 kézzel", sets: 2 },
+        { name: "Tricepsz fejfölött", sets: 2 },
+      ]
+    },
+    {
+      id: "vasarnap", name: "Vasárnap – Pull", dot: "dot-pull",
+      exercises: [
+        { name: "Lehúzás két kézzel gépen", sets: 2 },
+        { name: "Evezés szűk fogással", sets: 2 },
+        { name: "Súlyzós bicepsz", sets: 2 },
+        { name: "T-rúdas evezés", sets: 2 },
+        { name: "Kalapács bicepsz", sets: 2 },
+      ]
+    },
+  ],
+  prExercises: [
+    "Hack guggolás (gumi assist)", "Combhajlító", "Combfeszítő", "Vádli", "Comb tárogatás",
+    "RDL", "Bolgár guggolás", "Fekvenyomás gépen", "Vállból nyomás", "Tárogatás",
+    "Oldalemelés", "Tricepsz letolás csigán 1 kézzel", "Tricepsz fejfölött",
+    "Lehúzás két kézzel gépen", "Evezés széles fogással gépen", "Evezés szűk fogással",
+    "T-rúdas evezés", "Bicepsz gépen", "Kalapács bicepsz", "Súlyzós bicepsz"
+  ]
+};
+
+let state = {
+  view: "naplo",       // naplo | statisztika
+  cycle: 0,
+  week: 0,
+  openDays: { hetfo: true },
+  data: {}             // data[cycleIdx][weekIdx][dayId][exName][setIdx] = {suly, ism, rir}
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem("edzes_v2");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state.data = parsed.data || {};
+      state.cycle = parsed.cycle || 0;
+      state.week = parsed.week || 0;
+    }
+  } catch(e) {}
+}
+
+function saveData() {
+  try {
+    localStorage.setItem("edzes_v2", JSON.stringify({ data: state.data, cycle: state.cycle, week: state.week }));
+    showToast();
+  } catch(e) {}
+}
+
+function getCell(cycleIdx, weekIdx, dayId, exName, setIdx) {
+  return state.data?.[cycleIdx]?.[weekIdx]?.[dayId]?.[exName]?.[setIdx] || {};
+}
+
+function setCell(cycleIdx, weekIdx, dayId, exName, setIdx, field, val) {
+  if (!state.data[cycleIdx]) state.data[cycleIdx] = {};
+  if (!state.data[cycleIdx][weekIdx]) state.data[cycleIdx][weekIdx] = {};
+  if (!state.data[cycleIdx][weekIdx][dayId]) state.data[cycleIdx][weekIdx][dayId] = {};
+  if (!state.data[cycleIdx][weekIdx][dayId][exName]) state.data[cycleIdx][weekIdx][dayId][exName] = {};
+  if (!state.data[cycleIdx][weekIdx][dayId][exName][setIdx]) state.data[cycleIdx][weekIdx][dayId][exName][setIdx] = {};
+  state.data[cycleIdx][weekIdx][dayId][exName][setIdx][field] = val;
+  saveData();
+}
+
+function epley(suly, ism, rir) {
+  if (!suly || !ism) return null;
+  const totalReps = parseFloat(ism) + (parseFloat(rir) || 0);
+  return (parseFloat(suly) * (1 + totalReps / 30)).toFixed(1);
+}
+
+function getPR(exName) {
+  let best = { suly: null, est1rm: null, cycle: null };
+  for (let c = 0; c < 3; c++) {
+    for (let w = 0; w < 4; w++) {
+      for (const day of PROGRAM.days) {
+        for (const ex of day.exercises) {
+          const name = ex.cycleVariant?.[c+1] || ex.name;
+          if (name !== exName && ex.name !== exName) continue;
+          for (let s = 0; s < ex.sets; s++) {
+            const cell = getCell(c, w, day.id, ex.name, s);
+            if (!cell.suly) continue;
+            const est = epley(cell.suly, cell.ism, cell.rir);
+            if (!best.est1rm || (est && parseFloat(est) > parseFloat(best.est1rm))) {
+              best = { suly: cell.suly, ism: cell.ism, rir: cell.rir, est1rm: est, cycle: c + 1 };
+            }
+          }
+        }
+      }
+    }
+  }
+  return best;
+}
+
+function getCycleBest(exName, cycleIdx) {
+  let best = { suly: null, ism: null, rir: null, est1rm: null };
+  for (let w = 0; w < 4; w++) {
+    for (const day of PROGRAM.days) {
+      for (const ex of day.exercises) {
+        if (ex.name !== exName) continue;
+        for (let s = 0; s < ex.sets; s++) {
+          const cell = getCell(cycleIdx, w, day.id, ex.name, s);
+          if (!cell.suly) continue;
+          const est = epley(cell.suly, cell.ism, cell.rir);
+          if (!best.est1rm || (est && parseFloat(est) > parseFloat(best.est1rm))) {
+            best = { suly: cell.suly, ism: cell.ism, rir: cell.rir, est1rm: est };
+          }
+        }
+      }
+    }
+  }
+  return best;
+}
+
+let toastTimer;
+function showToast() {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1500);
+}
+
+function render() {
+  document.getElementById("app").innerHTML = buildApp();
+  attachEvents();
+}
+
+function buildApp() {
+  return `
+    ${buildHeader()}
+    ${state.view === "naplo" ? buildNaplo() : buildStatisztika()}
+    ${buildBottomNav()}
+  `;
+}
+
+function buildHeader() {
+  if (state.view === "statisztika") {
+    return `
+      <div class="app-header">
+        <div class="header-top">
+          <div class="app-title">Edző<span>Napló</span></div>
+          <div style="font-size:13px;color:var(--text2);">Statisztika & PR</div>
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="app-header">
+      <div class="header-top">
+        <div class="app-title">Edző<span>Napló</span></div>
+      </div>
+      <div class="tab-row" id="cycle-tabs">
+        ${PROGRAM.cycles.map((c, i) => `<button class="tab ${i===state.cycle?'active':''}" data-type="cycle" data-idx="${i}">${c}</button>`).join("")}
+      </div>
+      <div class="tab-row" id="week-tabs">
+        ${PROGRAM.weeks.map((w, i) => `<button class="tab ${i===state.week?'active':''}" data-type="week" data-idx="${i}">${w}</button>`).join("")}
+      </div>
+    </div>`;
+}
+
+function buildNaplo() {
+  return `<div class="content">${PROGRAM.days.map(day => buildDayBlock(day)).join("")}</div>`;
+}
+
+function buildDayBlock(day) {
+  const isOpen = state.openDays[day.id];
+  return `
+    <div class="day-block ${isOpen ? 'open' : ''}" id="day-${day.id}">
+      <div class="day-header" data-day="${day.id}">
+        <div class="day-dot ${day.dot}"></div>
+        <div class="day-name">${day.name}</div>
+        <div class="day-chevron">▾</div>
+      </div>
+      <div class="day-exercises">
+        ${day.exercises.map(ex => buildExercise(ex, day.id)).join("")}
+      </div>
+    </div>`;
+}
+
+function buildExercise(ex, dayId) {
+  const exName = ex.cycleVariant?.[state.cycle + 1] || ex.name;
+  const rows = [];
+  for (let s = 0; s < ex.sets; s++) {
+    const cell = getCell(state.cycle, state.week, dayId, ex.name, s);
+    rows.push(`
+      <div class="set-row">
+        <div class="set-label">S${s+1}</div>
+        <input class="set-input" type="number" inputmode="decimal" placeholder="kg"
+          value="${cell.suly || ''}"
+          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="suly">
+        <input class="set-input" type="number" inputmode="numeric" placeholder="ism"
+          value="${cell.ism || ''}"
+          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="ism">
+        <input class="set-input rir-input" type="number" inputmode="numeric" placeholder="RIR"
+          value="${cell.rir !== undefined && cell.rir !== '' ? cell.rir : ''}"
+          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="rir">
+      </div>`);
+  }
+  return `
+    <div class="exercise-block">
+      <div class="ex-name">${exName}</div>
+      <div class="col-headers">
+        <div></div>
+        <div class="col-h">Súly (kg)</div>
+        <div class="col-h">Ismétlés</div>
+        <div class="col-h">RIR</div>
+      </div>
+      ${rows.join("")}
+    </div>`;
+}
+
+function buildStatisztika() {
+  const cards = PROGRAM.prExercises.map(exName => {
+    const c1 = getCycleBest(exName, 0);
+    const c2 = getCycleBest(exName, 1);
+    const c3 = getCycleBest(exName, 2);
+    const hasAny = c1.suly || c2.suly || c3.suly;
+    if (!hasAny) return `
+      <div class="pr-card">
+        <div class="pr-card-header"><div class="pr-ex-name">${exName}</div></div>
+        <div class="empty-pr">Még nincs adat</div>
+      </div>`;
+
+    const pr = getPR(exName);
+
+    function cycleCol(data, cIdx) {
+      if (!data.suly) return `<div class="pr-cycle"><div class="pr-cycle-label">C${cIdx+1}</div><div style="color:var(--text3);font-size:13px;padding:8px 0">–</div></div>`;
+      const isPR = pr.cycle === cIdx + 1;
+      return `
+        <div class="pr-cycle">
+          <div class="pr-cycle-label">C${cIdx+1}${isPR ? ' 🏆' : ''}</div>
+          <div class="pr-1rm" style="${isPR ? '' : 'color:var(--text2);font-size:15px'}">${data.est1rm ? data.est1rm+'kg' : '–'}</div>
+          <div class="pr-sub">${data.suly}kg × ${data.ism || '?'}${data.rir !== undefined && data.rir !== '' ? ' @'+data.rir : ''}</div>
+        </div>`;
+    }
+
+    return `
+      <div class="pr-card">
+        <div class="pr-card-header">
+          <div class="pr-ex-name">${exName}${pr.est1rm ? `<span class="pr-badge">~1RM: ${pr.est1rm}kg</span>` : ''}</div>
+        </div>
+        <div class="pr-stats">
+          ${cycleCol(c1, 0)}
+          ${cycleCol(c2, 1)}
+          ${cycleCol(c3, 2)}
+        </div>
+      </div>`;
+  });
+  return `<div class="pr-page">${cards.join("")}</div>`;
+}
+
+function buildBottomNav() {
+  return `
+    <nav class="bottom-nav">
+      <button class="nav-btn ${state.view==='naplo'?'active':''}" data-view="naplo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 12h6M9 16h4" stroke-linecap="round"/>
+        </svg>
+        Napló
+      </button>
+      <button class="nav-btn ${state.view==='statisztika'?'active':''}" data-view="statisztika">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18l4-8 4 6 4-4 4 6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 6h18M3 10h18" stroke-linecap="round" opacity="0.2"/>
+        </svg>
+        Statisztika
+      </button>
+    </nav>`;
+}
+
+function attachEvents() {
+  // Tab switches
+  document.querySelectorAll("[data-type='cycle']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.cycle = parseInt(btn.dataset.idx);
+      render();
+    });
+  });
+  document.querySelectorAll("[data-type='week']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.week = parseInt(btn.dataset.idx);
+      render();
+    });
+  });
+
+  // Day toggles
+  document.querySelectorAll(".day-header").forEach(header => {
+    header.addEventListener("click", () => {
+      const dayId = header.dataset.day;
+      state.openDays[dayId] = !state.openDays[dayId];
+      const block = document.getElementById("day-" + dayId);
+      block.classList.toggle("open", state.openDays[dayId]);
+      block.querySelector(".day-chevron").style.transform = state.openDays[dayId] ? "rotate(180deg)" : "";
+    });
+  });
+
+  // Input changes (debounced save)
+  let saveTimer;
+  document.querySelectorAll(".set-input").forEach(input => {
+    input.addEventListener("change", () => {
+      const { day, ex, set, field } = input.dataset;
+      setCell(state.cycle, state.week, day, ex, parseInt(set), field, input.value);
+    });
+    input.addEventListener("blur", () => {
+      const { day, ex, set, field } = input.dataset;
+      setCell(state.cycle, state.week, day, ex, parseInt(set), field, input.value);
+    });
+  });
+
+  // Bottom nav
+  document.querySelectorAll("[data-view]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.view = btn.dataset.view;
+      render();
+    });
+  });
+}
+
+// Boot
+loadState();
+render();
+</script>
+</body>
+</html>
