@@ -2,681 +2,461 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Edzésnapló</title>
+<title>Edzésnapló · Naptár és edzések</title>
 <style>
-  :root {
-    --bg: #0f0f11;
-    --bg2: #1a1a1f;
-    --bg3: #222228;
-    --bg4: #2a2a32;
-    --accent: #c8f135;
-    --accent2: #a8d420;
-    --text: #f0f0f0;
-    --text2: #999;
-    --text3: #666;
-    --red: #ff4d4d;
-    --blue: #4da6ff;
-    --orange: #ff9500;
-    --green: #30d158;
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overscroll-behavior: none;
-  }
+:root{
+  --navy:#1a2d5a;--navy2:#213570;--navy3:#2a4090;--blue:#2563eb;--blue2:#3b7fff;--accent:#4f9cff;--accent2:#7bb8ff;
+  --bg:#f0f4fb;--bg2:#ffffff;--bg3:#e8eef8;--text:#0f1e3d;--text2:#4a5a80;--text3:#8898b8;
+  --yellow:#f59e0b;--yellow-bg:#fffbeb;--yellow-border:#fde68a;--green:#10b981;--green-bg:#ecfdf5;--red:#ef4444;--red-bg:#fef2f2;
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+button,input{font:inherit;}
+button{cursor:pointer;border:none;}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
+input[type=number]{-moz-appearance:textfield;}
 
-  /* HEADER */
-  .app-header {
-    background: var(--bg2);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 0 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-  }
-  .app-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .app-title span { color: var(--accent); }
-  .header-btn {
-    background: var(--bg3);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: var(--radius-sm);
-    color: var(--text2);
-    font-size: 13px;
-    padding: 7px 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .header-btn:active { transform: scale(0.96); background: var(--bg4); }
+.hdr{background:linear-gradient(160deg,var(--navy) 0%,var(--navy3) 100%);position:sticky;top:0;z-index:100;padding:0 18px;box-shadow:0 4px 24px rgba(26,45,90,0.18);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;min-height:58px;gap:10px;}
+.logo{font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#fff;white-space:nowrap;}.logo em{color:var(--accent2);font-style:normal;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,0.48);font-weight:700;letter-spacing:0.3px;text-transform:uppercase;text-align:right;}
+.tab-section{padding:8px 0 12px;}.tab-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;}
+.tab-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}.tab-row::-webkit-scrollbar{display:none;}
+.tab{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:700;padding:7px 16px;white-space:nowrap;flex-shrink:0;transition:all .15s;outline:none;}
+.tab.active{background:#fff;border-color:#fff;color:var(--navy);}.tab:active,.btn:active,.bnav-btn:active{transform:scale(.97);}
+.content,.pr-page,.settings-page{padding:14px 16px 98px;}.section-title{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin:16px 0 8px 2px;}
 
-  /* CYCLE + WEEK TABS */
-  .tab-row {
-    display: flex;
-    gap: 6px;
-    padding: 10px 0 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .tab-row::-webkit-scrollbar { display: none; }
-  .tab {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    color: var(--text2);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 6px 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .tab.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #111;
-  }
-  .tab:active { transform: scale(0.96); }
+.hero-wrap{padding:16px 16px 0;}.hero-card{background:linear-gradient(135deg,var(--navy2) 0%,var(--blue) 100%);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(37,99,235,0.25);}
+.hero-card::before{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.06);}.hero-card::after{content:'';position:absolute;right:20px;bottom:-40px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.hero-label{font-size:11px;font-weight:800;letter-spacing:0.6px;opacity:0.62;text-transform:uppercase;margin-bottom:4px;}.hero-week{font-size:28px;font-weight:850;letter-spacing:-0.5px;margin-bottom:2px;}.hero-cycle{font-size:13px;opacity:0.7;font-weight:600;}
+.hero-pills{display:flex;gap:8px;margin-top:14px;overflow-x:auto;scrollbar-width:none;}.hero-pill{background:rgba(255,255,255,0.15);border-radius:12px;padding:6px 12px;font-size:12px;font-weight:700;white-space:nowrap;}.hero-pill.active{background:#fff;color:var(--navy);}
 
-  /* WORKOUT DAY CARDS */
-  .content { padding: 12px 14px 100px; }
-  .day-block { margin-bottom: 12px; }
-  .day-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 16px;
-    background: var(--bg2);
-    border-radius: var(--radius) var(--radius) 0 0;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-bottom: none;
-    cursor: pointer;
-    user-select: none;
-  }
-  .day-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .day-name { font-size: 15px; font-weight: 600; flex: 1; }
-  .day-chevron {
-    color: var(--text3);
-    font-size: 18px;
-    transition: transform 0.2s;
-  }
-  .day-block.open .day-chevron { transform: rotate(180deg); }
-  .day-block.open .day-header { border-radius: var(--radius) var(--radius) 0 0; }
-  .day-exercises {
-    display: none;
-    background: var(--bg2);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    padding-bottom: 4px;
-  }
-  .day-block.open .day-exercises { display: block; }
+.card,.day-card,.pr-card,.settings-card,.summary-card{background:var(--bg2);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.day-hdr{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none;}.day-icon-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.day-icon-wrap svg{width:20px;height:20px;}
+.day-info{flex:1;min-width:0;}.day-name{font-size:15px;font-weight:800;color:var(--text);line-height:1.2;}.day-sub{font-size:12px;color:var(--text3);font-weight:600;margin-top:1px;}.day-chevron{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .25s;}.day-chevron svg{width:14px;height:14px;stroke:var(--text3);}.day-card.open .day-chevron{transform:rotate(180deg);}.day-exlist{display:none;border-top:1px solid var(--bg3);}.day-card.open .day-exlist{display:block;}
+.ex-block{padding:14px 16px 12px;border-bottom:1px solid var(--bg3);}.ex-block:last-child{border-bottom:none;}.ex-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}.ex-name{font-size:14px;font-weight:800;color:var(--text);line-height:1.25;}
+.col-hdr{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;}.col-h{font-size:10px;font-weight:800;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:0.5px;}.set-row{display:grid;grid-template-columns:30px 1fr 1fr 64px;gap:6px;margin-bottom:6px;align-items:start;}.set-lbl{height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:var(--r-xs);font-size:11px;font-weight:850;color:var(--text3);}.inp-wrap{display:flex;flex-direction:column;gap:3px;}.set-inp{background:var(--bg3);border:1.5px solid transparent;border-radius:var(--r-xs);color:var(--text);font-size:17px;font-weight:800;height:44px;padding:0 8px;text-align:center;width:100%;outline:none;-webkit-appearance:none;transition:all .15s;}.set-inp:focus{border-color:var(--blue);background:#eff6ff;color:var(--blue);}.set-inp::placeholder{color:var(--text3);font-size:13px;font-weight:500;}.set-inp.rir{background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow);}.prev-val{font-size:10px;color:var(--text3);text-align:center;height:13px;line-height:13px;font-weight:600;}
 
-  /* EXERCISE ROW */
-  .exercise-block {
-    padding: 12px 16px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .exercise-block:last-child { border-bottom: none; }
-  .ex-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
+.btn{border-radius:12px;padding:12px 14px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}.btn.primary{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,0.25);}.btn.dark{background:var(--navy);color:#fff;}.btn.light{background:var(--bg3);color:var(--text2);}.btn.green{background:var(--green);color:#fff;}.btn.red{background:var(--red-bg);color:var(--red);}.btn.small{padding:8px 10px;font-size:12px;border-radius:10px;}.btn.full{width:100%;}.btn-row{display:flex;gap:8px;flex-wrap:wrap;}.btn-row .btn{flex:1;min-width:110px;}
+.focus-top{display:grid;gap:10px;margin-bottom:10px;}.focus-card{background:linear-gradient(135deg,var(--navy2) 0%,var(--blue) 100%);border-radius:20px;padding:18px;color:#fff;box-shadow:0 8px 32px rgba(37,99,235,0.25);}.focus-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.65;font-weight:850;}.focus-title{font-size:26px;font-weight:900;letter-spacing:-.5px;margin-top:3px;}.focus-sub{font-size:13px;opacity:.75;font-weight:600;margin-top:3px;}.day-select{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;}.day-chip{background:#fff;color:var(--text2);border:1px solid var(--bg3);border-radius:18px;padding:8px 12px;font-size:12px;font-weight:850;white-space:nowrap;}.day-chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.session-bar{background:#fff;border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);}.session-state{font-size:12px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}.session-state.live{color:var(--green);}
+.timer-card{background:var(--navy);color:#fff;border-radius:16px;padding:14px 16px;margin:8px 0 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;}.timer-card.done{background:var(--green);}.timer-title{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.65;font-weight:850;}.timer-time{font-size:30px;font-weight:900;letter-spacing:-.5px;}.timer-controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}.timer-controls .btn{background:rgba(255,255,255,.14);color:#fff;padding:8px 10px;font-size:12px;}
 
-  /* SET ROW */
-  .set-row {
-    display: grid;
-    grid-template-columns: 28px 1fr 1fr 72px;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-  .set-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text3);
-    text-align: center;
-    background: var(--bg3);
-    border-radius: 6px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .set-input {
-    background: var(--bg3);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 16px;
-    font-weight: 500;
-    height: 42px;
-    padding: 0 10px;
-    text-align: center;
-    width: 100%;
-    outline: none;
-    -webkit-appearance: none;
-    transition: border-color 0.15s;
-  }
-  .set-input:focus { border-color: var(--accent); }
-  .set-input::placeholder { color: var(--text3); font-size: 14px; }
-  .set-input.rir-input {
-    background: rgba(250, 204, 21, 0.08);
-    border-color: rgba(250, 204, 21, 0.2);
-    color: #facc15;
-  }
-  .set-input.rir-input:focus { border-color: #facc15; }
-  .col-headers {
-    display: grid;
-    grid-template-columns: 28px 1fr 1fr 72px;
-    gap: 6px;
-    margin-bottom: 4px;
-  }
-  .col-h {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text3);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+.ncb{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--r);padding:18px;margin-bottom:10px;color:#fff;}.ncb-title{font-size:16px;font-weight:850;margin-bottom:4px;}.ncb-sub{font-size:13px;opacity:0.78;margin-bottom:14px;line-height:1.4;}.ncb-btn{background:#fff;border-radius:var(--r-sm);color:var(--navy);font-size:14px;font-weight:850;padding:12px 20px;width:100%;}
+.pr-card-hdr,.settings-card-hdr{padding:13px 16px 11px;border-bottom:1px solid var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:8px;}.pr-ex{font-size:14px;font-weight:800;flex:1;line-height:1.3;color:var(--text);}.pr-badge{background:linear-gradient(90deg,var(--blue),var(--accent));color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:12px;white-space:nowrap;}.pr-cycles{display:flex;overflow-x:auto;scrollbar-width:none;}.pr-cyc{padding:12px 14px;text-align:center;border-right:1px solid var(--bg3);flex-shrink:0;min-width:90px;}.pr-cyc-lbl{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}.pr-1rm{font-size:19px;font-weight:900;color:var(--text2);}.pr-1rm.is-pr{color:var(--blue);}.pr-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4;}.pr-empty{font-size:13px;color:var(--text3);font-style:italic;padding:12px 16px;}
+.summary-card{padding:16px;}.summary-title{font-size:18px;font-weight:900;margin-bottom:12px;}.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.metric{background:var(--bg3);border-radius:12px;padding:12px;}.metric-label{font-size:10px;font-weight:850;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}.metric-val{font-size:20px;font-weight:900;color:var(--text);margin-top:3px;}.summary-note{margin-top:10px;background:var(--green-bg);color:#047857;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:750;line-height:1.35;}
 
-  /* STAT SHEET (PR page) */
-  .pr-page { padding: 12px 14px 100px; }
-  .pr-card {
-    background: var(--bg2);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: var(--radius);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .pr-card-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .pr-ex-name { font-size: 14px; font-weight: 600; }
-  .pr-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-  }
-  .pr-cycle {
-    padding: 10px 12px;
-    border-right: 1px solid rgba(255,255,255,0.05);
-    text-align: center;
-  }
-  .pr-cycle:last-child { border-right: none; }
-  .pr-cycle-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
-  .pr-1rm { font-size: 18px; font-weight: 700; color: var(--accent); }
-  .pr-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .pr-badge {
-    display: inline-block;
-    background: rgba(200, 241, 53, 0.12);
-    color: var(--accent);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 10px;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
-  .pr-badge.red { background: rgba(255,77,77,0.12); color: var(--red); }
+.settings-info{font-size:13px;color:var(--text2);line-height:1.4;background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,.05);}.settings-day{padding:14px 16px;border-bottom:1px solid var(--bg3);}.settings-day:last-child{border-bottom:none;}.settings-line{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}.edit-inp{height:42px;background:var(--bg3);border:1.5px solid transparent;border-radius:10px;padding:0 10px;font-size:14px;font-weight:750;color:var(--text);outline:none;width:100%;}.edit-inp:focus{border-color:var(--blue);background:#eff6ff;}.settings-ex{display:grid;grid-template-columns:1fr 66px;gap:8px;margin-top:8px;}.settings-actions{display:flex;gap:6px;grid-column:1/-1;}.settings-actions .btn{flex:1;}.add-box{display:grid;grid-template-columns:1fr 72px;gap:8px;margin-top:12px;background:var(--bg);padding:10px;border-radius:12px;}.danger-zone{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+.toast{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--green);color:#fff;font-size:13px;font-weight:850;padding:9px 22px;border-radius:20px;opacity:0;transition:all .25s;z-index:500;pointer-events:none;box-shadow:0 4px 16px rgba(16,185,129,0.3);}.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}.toast.warn{background:var(--yellow);}.toast.red{background:var(--red);}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bg3);display:flex;padding-bottom:env(safe-area-inset-bottom,0);z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0 13px;color:var(--text3);font-size:9.5px;font-weight:850;text-transform:uppercase;letter-spacing:0.4px;background:none;transition:color .15s;}.bnav-btn svg{width:22px;height:22px;stroke-width:1.8;}.bnav-btn.active{color:var(--blue);}
+.ic-leg{background:#fef2f2;}.ic-leg svg{stroke:#ef4444;}.ic-upper{background:#eff6ff;}.ic-upper svg{stroke:#3b82f6;}.ic-lower{background:#fff7ed;}.ic-lower svg{stroke:#f97316;}.ic-push{background:#faf5ff;}.ic-push svg{stroke:#8b5cf6;}.ic-pull{background:#f0fdf4;}.ic-pull svg{stroke:#22c55e;}.ic-generic{background:#eff6ff;}.ic-generic svg{stroke:#2563eb;}
 
-  /* BOTTOM NAV */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--bg2);
-    border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    z-index: 200;
-  }
-  .nav-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 10px 0 12px;
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    transition: color 0.15s;
-    border: none;
-    background: none;
-  }
-  .nav-btn svg { width: 22px; height: 22px; stroke-width: 1.8; }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn:active { opacity: 0.7; }
+/* Mobile workout ergonomics */
+.ex-block{position:relative;scroll-margin-top:190px;}
+.ex-block.active-timer{background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);box-shadow:inset 4px 0 0 var(--blue);}
+.ex-block.active-timer .ex-name{color:var(--blue);}
+.ex-top{position:sticky;top:154px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);z-index:20;margin:-14px -16px 10px;padding:12px 16px;border-bottom:1px solid var(--bg3);}
+.rest-btn{min-width:86px;}
 
-  /* SAVE INDICATOR */
-  .save-toast {
-    position: fixed;
-    top: 70px; left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    background: var(--accent);
-    color: #111;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 8px 20px;
-    border-radius: 20px;
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 300;
-    pointer-events: none;
-  }
-  .save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ex-timer-pill{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950;white-space:nowrap;box-shadow:0 4px 14px rgba(26,45,90,.22);}
+.ex-timer-pill.done{background:var(--green);}
+.ex-timer-pill .js-timer-time{font-size:15px;letter-spacing:-.2px;}
+@supports(-webkit-touch-callout:none){
+  .floating-timer{bottom:calc(92px + env(safe-area-inset-bottom,0));transform:translateZ(0);-webkit-transform:translateZ(0);}
+  .ex-block.active-timer{scroll-margin-top:150px;}
+  .inline-timer{position:relative;z-index:2;}
+}
 
-  .empty-pr { color: var(--text3); font-size: 13px; padding: 10px 16px; font-style: italic; }
+.inline-timer{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);color:#fff;border-radius:16px;padding:12px;margin:10px 0 12px;box-shadow:0 6px 24px rgba(37,99,235,.22);}
+.inline-timer.done{background:var(--green);}
+.inline-timer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.inline-timer-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.72;font-weight:900;}
+.inline-timer-time{font-size:28px;font-weight:950;letter-spacing:-.4px;line-height:1;}
+.inline-timer .timer-controls{justify-content:stretch;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.inline-timer .timer-controls .btn{min-width:0;padding:9px 4px;border-radius:10px;}
+.floating-timer{position:fixed;left:12px;right:12px;bottom:calc(70px + env(safe-area-inset-bottom,0));z-index:260;background:rgba(26,45,90,.96);color:#fff;border-radius:18px;padding:10px 12px;box-shadow:0 10px 30px rgba(15,30,61,.32);display:flex;align-items:center;justify-content:space-between;gap:10px;backdrop-filter:blur(14px);}
+.floating-timer.done{background:rgba(16,185,129,.98);}
+.floating-timer-title{font-size:10px;text-transform:uppercase;letter-spacing:.55px;opacity:.7;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw;}
+.floating-timer-time{font-size:24px;font-weight:950;letter-spacing:-.4px;line-height:1;}
+.floating-timer-actions{display:flex;gap:6px;flex-shrink:0;}
+.floating-timer-actions .btn{background:rgba(255,255,255,.14);color:#fff;padding:8px 10px;font-size:12px;border-radius:10px;}
+@media(max-width:520px){
+  .hdr{padding:0 14px;}
+  .hdr-top{min-height:52px;}
+  .tab-section{padding:6px 0 9px;}
+  .content,.pr-page,.settings-page{padding:12px 12px 116px;}
+  .focus-card{padding:16px;border-radius:18px;}
+  .focus-title{font-size:23px;}
+  .day-chip{padding:8px 11px;}
+  .session-bar{padding:10px;}
+  .timer-card{display:none;}
+  .ex-block{padding:14px 12px 12px;scroll-margin-top:176px;}
+  .ex-top{top:142px;margin:-14px -12px 10px;padding:10px 12px;}
+  .ex-name{font-size:14.5px;}
+  .col-hdr,.set-row{grid-template-columns:28px minmax(58px,1fr) minmax(58px,1fr) 54px;gap:5px;}
+  .set-lbl,.set-inp{height:42px;}
+  .set-inp{font-size:16px;padding:0 5px;}
+  .prev-val{font-size:9.5px;}
+  .btn.small{padding:8px 9px;}
+}
 
-  /* Color dots per day */
-  .dot-leg { background: #ff6b6b; }
-  .dot-upper { background: var(--blue); }
-  .dot-lower { background: var(--orange); }
-  .dot-push { background: #bf5af2; }
-  .dot-pull { background: var(--green); }
+@media(max-width:370px){.set-row,.col-hdr{grid-template-columns:28px 1fr 1fr 56px;gap:5px}.set-inp{font-size:15px;padding:0 5px}.content,.pr-page,.settings-page{padding-left:12px;padding-right:12px}.hdr{padding:0 14px}.summary-grid{grid-template-columns:1fr}}
 
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-  input[type=number] { -moz-appearance: textfield; }
+/* UI cleanup v2: compact iPhone timer */
+.content,.pr-page,.settings-page{padding-bottom:calc(132px + env(safe-area-inset-bottom,0));}
+.ex-block.active-timer{background:#fff;box-shadow:inset 4px 0 0 var(--blue);}
+.ex-block.active-timer .ex-top{position:sticky;top:0;z-index:35;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:10px 0;margin:-4px 0 8px;border-bottom:1px solid var(--bg3);}
+.ex-timer-pill{min-width:64px;justify-content:center;background:var(--navy);color:#fff;border-radius:12px;padding:8px 10px;font-size:14px;font-weight:950;box-shadow:none;}
+.inline-timer{display:none!important;}
+.floating-timer{left:16px;right:16px;bottom:calc(78px + env(safe-area-inset-bottom,0));border-radius:16px;padding:8px 10px;min-height:52px;background:rgba(26,45,90,.94);}
+.floating-timer-title{font-size:9px;max-width:48vw;}
+.floating-timer-time{font-size:22px;}
+.floating-timer-actions .btn{padding:7px 9px;font-size:12px;border-radius:10px;}
+.rest-btn{min-width:78px;}
+@supports (-webkit-touch-callout:none){.ex-block.active-timer .ex-top{top:0}.floating-timer{bottom:calc(82px + env(safe-area-inset-bottom,0));}}
+@media(max-width:370px){.floating-timer{left:10px;right:10px}.ex-timer-pill{font-size:13px;padding:7px 8px}.rest-btn{min-width:70px}}
+
+/* v3 fix: iPhone first-exercise overlap cleanup.
+   The exercise header must NOT stick under the large sticky page header;
+   the floating timer already provides persistent visibility. */
+.ex-block{padding-top:16px!important;}
+.ex-block .ex-top,
+.ex-block.active-timer .ex-top{
+  position:relative!important;
+  top:auto!important;
+  z-index:2!important;
+  margin:0 0 10px 0!important;
+  padding:0!important;
+  background:transparent!important;
+  border-bottom:0!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.ex-block:first-child{padding-top:18px!important;}
+.day-exlist{overflow:visible;}
+@media(max-width:520px){
+  .ex-block{padding-top:16px!important;}
+  .ex-block .ex-top,
+  .ex-block.active-timer .ex-top{margin:0 0 10px 0!important;padding:0!important;}
+}
+
+
+
+/* HARD FIX v4: remove all sticky/inline timer overlap on iPhone */
+.timer-card,
+.inline-timer{display:none!important;}
+.day-exlist{overflow:visible!important;}
+.ex-block{position:relative!important;padding:16px 12px 14px!important;scroll-margin-top:24px!important;}
+.ex-block:first-child{padding-top:22px!important;}
+.ex-block .ex-top,
+.ex-block.active-timer .ex-top{
+  position:static!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  z-index:1!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin:0 0 12px 0!important;
+  padding:0!important;
+  min-height:40px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.ex-block.active-timer{background:#fff!important;box-shadow:inset 4px 0 0 var(--blue)!important;}
+.ex-block.active-timer .ex-name{color:var(--blue)!important;}
+.ex-action-row{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.rir-select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg, transparent 50%, var(--yellow) 50%),linear-gradient(135deg, var(--yellow) 50%, transparent 50%);background-position:calc(100% - 16px) 18px,calc(100% - 11px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:22px!important;}
+@media(max-width:520px){
+  .ex-block{padding:16px 12px 14px!important;}
+  .ex-block:first-child{padding-top:22px!important;}
+  .ex-block .ex-top,.ex-block.active-timer .ex-top{position:static!important;margin:0 0 12px 0!important;padding:0!important;}
+  .ex-name{font-size:14.5px!important;line-height:1.22!important;}
+}
+
+
+/* Calendar and logging refinements. Keep the original blue visual language. */
+:root{--text3:#667594;--green:#047857;--red:#c73535}
+body{font-size:16px;line-height:1.5}
+button,input,select{font:inherit}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #60a5fa;outline-offset:3px}
+button:disabled{cursor:default;opacity:.5}input:disabled,select:disabled{opacity:.85;color:var(--text2);-webkit-text-fill-color:var(--text2)}
+h1{font-size:28px;line-height:1.2;letter-spacing:-.7px}h2{font-size:19px;line-height:1.35}h3{font-size:17px}
+.hdr{position:relative;padding:0 max(18px,calc((100vw - 850px)/2));box-shadow:none}
+.hdr-top{min-height:76px;flex-wrap:wrap;padding:12px 0;gap:4px 12px}.logo-button{background:none;text-align:left;flex:1}.hdr-sub{font-size:12px;color:#c9d9f7}.save-status{width:100%;text-align:right;font-size:12px;color:#c9d9f7}.save-status.failed{color:#fecaca}
+.selected-period{display:flex;align-items:center;gap:12px;padding:0 0 16px;color:white}.selected-period>div{flex:1}.selected-period strong{font-size:14px}.selected-period small{display:block;color:#c9d9f7;font-size:12px}.selected-period .tab{font-size:14px;min-height:42px;padding:6px 12px}
+.content,.pr-page,.settings-page{max-width:886px;margin:0 auto;padding:24px 18px calc(164px + env(safe-area-inset-bottom,0))}
+.page-heading{margin:0 0 22px}.eyebrow{font-size:14px;color:var(--text2);margin-bottom:7px}.page-heading .eyebrow:first-letter{text-transform:uppercase}
+.current-week-card{background:linear-gradient(120deg,#1a2d5a,#294ec1);color:white;border-radius:20px;padding:24px;margin-bottom:26px;box-shadow:0 8px 24px #1a2d5a1a}.current-week-card .eyebrow{color:#ccdcff;margin:0}.current-week-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.current-week-count{font-size:14px;background:#ffffff1a;padding:5px 11px;border-radius:8px}.current-week-card h2{font-size:24px;letter-spacing:-.4px}.current-week-card>p{color:#c9d9f7;margin-top:4px;font-size:14px}.current-week-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:22px;font-size:14px;color:#d6e4ff}.current-week-bottom .btn{background:#fff;color:#1a2d5a}.dot-separator{padding:0 5px}
+.calendar-panel{background:white;border:1px solid #dfe6f1;border-radius:20px;padding:22px}.calendar-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.text-btn{font-size:14px;color:var(--blue);background:none;padding:8px 0;text-align:right;font-weight:600}.year-tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px}.year-tab{font-size:18px;font-weight:750;border-radius:10px;background:var(--bg);color:var(--text2);min-height:44px;padding:7px 20px}.year-tab.active{background:var(--navy);color:white}.month-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.month-btn{font-size:14px;min-height:44px;background:#f3f6fb;border-radius:9px;color:var(--text2);border:1px solid transparent;padding:8px 3px}.month-btn.this-month{border-color:#9dbbfa}.month-btn.active{background:#eaf1ff;color:#1d4ed8;border-color:#2563eb;font-weight:750}.month-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.month-heading>span{font-size:12px;color:var(--text2)}
+.week-list{display:grid;gap:9px}.week-card{width:100%;text-align:left;display:flex;align-items:center;gap:16px;border:1px solid #e0e7f1;border-radius:13px;background:white;padding:16px;color:var(--text)}.week-card:hover:not(:disabled){border-color:#7295de;background:#f8faff}.week-card.current{border:2px solid #2563eb;background:#f3f7ff;padding:15px}.week-number{font-size:23px;font-weight:800;text-align:center;min-width:42px;color:var(--text2)}.week-number small{display:block;font-size:12px;font-weight:500}.week-content{flex:1;min-width:0}.week-content strong{display:block;font-size:16px;line-height:1.4}.week-content>span{display:block;font-size:13px;color:var(--text2);margin-top:2px}.week-content .week-progress{font-size:12px;color:#586b8c;margin-top:6px}.week-end{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:22px}.badge{font-size:12px;font-weight:750;background:#dce9ff;color:#1746a2;padding:3px 7px;border-radius:6px}.calendar-note{font-size:12px;color:var(--text2);margin-top:16px}
+.resume-card{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#e5f6ed;border:1px solid #b5decb;border-radius:16px;padding:18px;margin-bottom:18px}.resume-card p{font-size:14px;color:#276447;margin-top:4px}
+.settings-pad{padding:20px}.settings-pad h2{margin-bottom:10px}.helper{font-size:14px;line-height:1.55;color:var(--text2);margin:10px 0 16px}.settings-field{display:flex;align-items:center;gap:12px;font-size:14px;margin:14px 0}.settings-field select{width:auto}.settings-field input[type=checkbox]{width:20px;height:20px;accent-color:var(--blue)}.mapping-card{border:1px solid #c5d7f9;margin-bottom:20px}.mapping-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.mapping-fields label{font-size:14px}.mapping-fields input,.mapping-fields select{margin-top:4px}.mapping-fields .date-field{grid-column:1/-1}summary{font-size:14px;color:var(--blue);cursor:pointer}label.btn{cursor:pointer}.edit-inp{height:46px;font-size:16px}
+.focus-card{padding:20px;box-shadow:none}.focus-label{font-size:13px;opacity:.85}.focus-sub{font-size:14px;opacity:.9}.day-chip{min-height:44px;font-size:14px}.session-state{font-size:13px;letter-spacing:0;text-transform:none}.session-bar{padding:16px}.session-bar .btn{min-height:46px}.progress-caption{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--text2);margin:18px 0 8px}.progress-caption>span:first-child{font-weight:750;color:var(--text)}.progress-track{height:6px;background:#dce4f1;border-radius:5px;margin-bottom:16px;overflow:hidden}.progress-track>div{height:100%;background:#047857;border-radius:5px;transition:width .15s}.day-hdr{width:100%;background:white;text-align:left}.day-sub{display:block;font-size:13px;line-height:1.5;margin-top:4px}.day-name{font-size:16px}.open-workout{padding:16px 16px 0}.empty-note{padding:20px;font-size:14px}
+.ex-block{padding:20px!important}.ex-block:first-child{padding-top:20px!important}.ex-name{font-size:16px}.col-hdr,.set-row{grid-template-columns:26px minmax(0,1fr) minmax(0,1fr) 64px 44px;gap:8px}.col-hdr{text-align:center;font-size:12px;font-weight:650;color:var(--text2);margin-bottom:8px}.set-inp{height:48px;font-size:18px;padding:0 4px}.set-lbl{height:48px;font-size:14px;background:transparent;color:var(--text2)}.set-inp.rir{color:#885600;background:#fff8e8;border-color:#f1d798}.done-btn{width:44px;height:48px;border-radius:9px;background:#edf1f7;color:#6b7b98;font-size:24px;border:1px solid #d8e1ef}.done-btn.checked{background:#047857;color:#fff;border-color:#047857}.set-row.is-done .set-inp:not(.rir){background:#e9f6ef;color:#115735}.previous-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px 34px;min-height:30px;color:var(--text2);font-size:12px}.copy-btn{font-size:14px;padding:5px 8px;background:#edf3ff;border-radius:7px;color:#1d4ed8;font-weight:650;flex-shrink:0}.btn.small{font-size:14px;min-height:40px}.ex-timer-pill{font-size:14px}.floating-timer{max-width:850px;left:50%;right:auto;width:calc(100% - 32px);transform:translateX(-50%);bottom:calc(85px + env(safe-area-inset-bottom,0))}.floating-timer-title{font-size:12px}.floating-timer-actions .btn{font-size:14px;min-height:40px}.bnav{justify-content:center}.bnav-btn{flex:0 1 170px;font-size:12px;text-transform:none;letter-spacing:0;min-height:75px}.section-title{font-size:14px;letter-spacing:0}.settings-info{font-size:14px}.pr-cyc-lbl,.pr-sub,.metric-label{font-size:12px}.summary-note{font-size:14px}.toast{max-width:calc(100vw - 24px);text-align:center;top:18px;font-size:14px;border-radius:12px}.storage-error{max-width:850px;margin:16px auto 0;padding:14px;background:#fff1f2;color:#a11a2b;border:1px solid #f5b6bf;border-radius:10px;font-size:14px}
+@media(max-width:600px){.content,.pr-page,.settings-page{padding-top:20px}.month-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.calendar-panel{padding:16px}.current-week-card{padding:20px}.current-week-card h2{font-size:22px}.current-week-bottom{align-items:stretch;flex-direction:column;gap:14px}.current-week-bottom .btn{width:100%;min-height:48px}.calendar-heading{align-items:center}.calendar-heading h2{font-size:18px}.text-btn{max-width:130px;line-height:1.35}.week-card{padding:13px 10px;gap:10px}.week-card.current{padding:12px 9px}.week-content strong{font-size:14px}.week-content>span{font-size:12px}.week-number{min-width:32px;font-size:21px}.badge{font-size:12px;padding:2px 5px}.week-end{gap:5px}.resume-card{align-items:stretch;flex-direction:column}.ex-block{padding:18px 12px!important}.ex-block:first-child{padding-top:18px!important}.col-hdr,.set-row{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 50px 42px;gap:6px}.set-inp{font-size:17px}.done-btn{width:42px}.previous-row{margin-left:28px}.ex-name{font-size:15px}.progress-caption{font-size:12px}.focus-title{font-size:25px}.selected-period{gap:8px}.selected-period strong{font-size:13px}.hdr-sub{font-size:12px}.current-week-card .eyebrow{font-size:14px}.day-hdr{padding:14px 12px}.day-name{font-size:14px}}
+@media(max-width:370px){h1{font-size:25px}.content,.pr-page,.settings-page{padding-left:10px;padding-right:10px}.calendar-panel{padding:12px}.badge{display:block;max-width:60px}.week-end{font-size:18px}.week-content strong{font-size:13px}.month-btn{font-size:12px}.col-hdr,.set-row{grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) 46px 40px;gap:4px}.done-btn{width:40px}.ex-action-row{gap:4px}.ex-timer-pill{min-width:45px;padding:6px}.ex-name{font-size:14px}.ex-top{gap:6px!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
-
-<div class="save-toast" id="toast">Mentve ✓</div>
-
+<div class="toast" id="toast" role="status" aria-live="polite">Mentve ✓</div>
 <div id="app"></div>
-
 <script>
-const PROGRAM = {
-  cycles: ["Ciklus 1", "Ciklus 2", "Ciklus 3"],
-  weeks: ["Week 1", "Week 2", "Week 3", "Week 4"],
-  days: [
-    {
-      id: "hetfo", name: "Hétfő – Leg", dot: "dot-leg",
-      exercises: [
-        { name: "Hack guggolás (gumi assist)", sets: 2 },
-        { name: "Combhajlító", sets: 2 },
-        { name: "Combfeszítő", sets: 2 },
-        { name: "Vádli", sets: 3 },
-        { name: "Comb tárogatás", sets: 2 },
-        { name: "Hasazás", sets: 3 },
-      ]
-    },
-    {
-      id: "szerda", name: "Szerda – Felső test", dot: "dot-upper",
-      exercises: [
-        { name: "Fekvenyomás gépen", sets: 2 },
-        { name: "Lehúzás két kézzel gépen", sets: 2 },
-        { name: "Evezés szűk fogással gépen", sets: 2, cycleVariant: { 2: "Evezés széles fogással gépen", 3: "Evezés széles fogással gépen" } },
-        { name: "Vállból nyomás", sets: 2 },
-        { name: "Tricepsz letolás csigán 1 kézzel", sets: 2 },
-        { name: "Bicepsz gépen", sets: 2 },
-      ]
-    },
-    {
-      id: "csutortok", name: "Csütörtök – Alsó test", dot: "dot-lower",
-      exercises: [
-        { name: "RDL", sets: 2 },
-        { name: "Bolgár guggolás", sets: 2 },
-        { name: "Combhajlító", sets: 2 },
-        { name: "Vádli", sets: 3 },
-        { name: "Comb tárogatás", sets: 2 },
-        { name: "Hasazás", sets: 3 },
-      ]
-    },
-    {
-      id: "szombat", name: "Szombat – Push", dot: "dot-push",
-      exercises: [
-        { name: "Fekvenyomás gépen", sets: 2 },
-        { name: "Vállból nyomás", sets: 2 },
-        { name: "Tárogatás", sets: 2 },
-        { name: "Oldalemelés", sets: 2 },
-        { name: "Tricepsz letolás csigán 1 kézzel", sets: 2 },
-        { name: "Tricepsz fejfölött", sets: 2 },
-      ]
-    },
-    {
-      id: "vasarnap", name: "Vasárnap – Pull", dot: "dot-pull",
-      exercises: [
-        { name: "Lehúzás két kézzel gépen", sets: 2 },
-        { name: "Evezés szűk fogással", sets: 2 },
-        { name: "Súlyzós bicepsz", sets: 2 },
-        { name: "T-rúdas evezés", sets: 2 },
-        { name: "Kalapács bicepsz", sets: 2 },
-      ]
-    },
-  ],
-  prExercises: [
-    "Hack guggolás (gumi assist)", "Combhajlító", "Combfeszítő", "Vádli", "Comb tárogatás",
-    "RDL", "Bolgár guggolás", "Fekvenyomás gépen", "Vállból nyomás", "Tárogatás",
-    "Oldalemelés", "Tricepsz letolás csigán 1 kézzel", "Tricepsz fejfölött",
-    "Lehúzás két kézzel gépen", "Evezés széles fogással gépen", "Evezés szűk fogással",
-    "T-rúdas evezés", "Bicepsz gépen", "Kalapács bicepsz", "Súlyzós bicepsz"
-  ]
+const STORAGE_KEY="edzes_v6";
+const LEGACY_KEY="edzes_v4";
+const WEEKS=["1. hét","2. hét","3. hét","4. hét"];
+const ICONS={
+  leg:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-linecap="round" stroke-linejoin="round"/>',
+  upper:'<path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke-linecap="round" stroke-linejoin="round"/>',
+  push:'<circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"/>',
+  pull:'<circle cx="12" cy="12" r="10"/><polyline points="12 16 8 12 12 8"/><line x1="16" y1="12" x2="8" y2="12" stroke-linecap="round"/>',
+  generic:'<path d="M4 12h16M7 8v8M17 8v8" stroke-linecap="round" stroke-linejoin="round"/>'
 };
+const DEFAULT_PROGRAM=[
+  {id:"hetfo",name:"Hétfő",sub:"Leg nap",ic:"ic-leg",iconKey:"leg",exercises:[{name:"Hack guggolás (gumi assist)",sets:2},{name:"Combhajlító",sets:2},{name:"Combfeszítő",sets:2},{name:"Vádli",sets:3},{name:"Comb tárogatás",sets:2},{name:"Hasazás",sets:3}]},
+  {id:"szerda",name:"Szerda",sub:"Felső test",ic:"ic-upper",iconKey:"upper",exercises:[{name:"Fekvenyomás gépen",sets:2},{name:"Lehúzás két kézzel gépen",sets:2},{name:"Evezés szűk/széles fogással gépen",sets:2},{name:"Vállból nyomás",sets:2},{name:"Tricepsz letolás csigán 1 kézzel",sets:2},{name:"Bicepsz gépen",sets:2}]},
+  {id:"csutortok",name:"Csütörtök",sub:"Alsó test",ic:"ic-lower",iconKey:"leg",exercises:[{name:"RDL",sets:2},{name:"Bolgár guggolás",sets:2},{name:"Combhajlító",sets:2},{name:"Vádli",sets:3},{name:"Comb tárogatás",sets:2},{name:"Hasazás",sets:3}]},
+  {id:"szombat",name:"Szombat",sub:"Push nap",ic:"ic-push",iconKey:"push",exercises:[{name:"Fekvenyomás gépen",sets:2},{name:"Vállból nyomás",sets:2},{name:"Tárogatás",sets:2},{name:"Oldalemelés",sets:2},{name:"Tricepsz letolás csigán 1 kézzel",sets:2},{name:"Tricepsz fejfölött",sets:2}]},
+  {id:"vasarnap",name:"Vasárnap",sub:"Pull nap",ic:"ic-pull",iconKey:"pull",exercises:[{name:"Lehúzás két kézzel gépen",sets:2},{name:"Evezés szűk fogással",sets:2},{name:"Súlyzós bicepsz",sets:2},{name:"T-rúdas evezés",sets:2},{name:"Kalapács bicepsz",sets:2}]}
+];
+let S={view:"mai",cycle:0,week:0,activeDayId:"",openDays:{hetfo:true},data:{},program:clone(DEFAULT_PROGRAM),workouts:[],prs:{},session:null,lastSummary:null,timer:{end:0,duration:90,label:""}};
+let toastT,timerT;
 
-let state = {
-  view: "naplo",       // naplo | statisztika
-  cycle: 0,
-  week: 0,
-  openDays: { hetfo: true },
-  data: {}             // data[cycleIdx][weekIdx][dayId][exName][setIdx] = {suly, ism, rir}
-};
-
-function loadState() {
-  try {
-    const saved = localStorage.getItem("edzes_v2");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      state.data = parsed.data || {};
-      state.cycle = parsed.cycle || 0;
-      state.week = parsed.week || 0;
-    }
-  } catch(e) {}
+function clone(x){return JSON.parse(JSON.stringify(x));}
+function esc(v){return String(v??"").replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[m]));}
+function uid(prefix="id"){return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);}
+function todayDayId(){const map={1:"hetfo",3:"szerda",4:"csutortok",6:"szombat",0:"vasarnap"};const id=map[new Date().getDay()];return S.program.some(d=>d.id===id)?id:(S.program[0]?.id||"");}
+function getDay(id){return S.program.find(d=>d.id===id)||S.program[0];}
+function allExerciseNames(){const names=S.program.flatMap(d=>d.exercises.map(e=>e.name));for(const cycle of Object.values(S.data))for(const week of Object.values(cycle))for(const day of Object.values(week))names.push(...Object.keys(day));return [...new Set(names)].sort((a,b)=>a.localeCompare(b,'hu'));}
+function normalizeProgram(p){return (Array.isArray(p)&&p.length?p:clone(DEFAULT_PROGRAM)).map((d,i)=>({id:d.id||uid("day"),name:d.name||"Edzésnap",sub:d.sub||"Edzés",ic:d.ic||"ic-generic",iconKey:d.iconKey||"generic",exercises:(Array.isArray(d.exercises)?d.exercises:[]).map(e=>({name:e.name||"Új gyakorlat",sets:Math.max(1,parseInt(e.sets)||1)}))}));}
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY)||localStorage.getItem(LEGACY_KEY);
+    if(raw){const p=validateBackup(JSON.parse(raw,safeReviver)); S={...S,...p,program:normalizeProgram(p.program),openDays:p.openDays||{},timer:p.timer||S.timer};}
+  }catch(e){storageBlocked=true;storageIssue="A korábbi mentés nem olvasható. Nem írjuk felül. Tölts vissza egy érvényes biztonsági mentést.";}
+  if(!S.activeDayId||!S.program.some(d=>d.id===S.activeDayId))S.activeDayId=todayDayId();
+  if(!S.calendar&&!hasHistory())S.calendar={anchor:'2025-12-29'};
+  S.prefs={rest:90,autoRest:true,...S.prefs};
+  S.view='attekintes';
+  if(S.session){S.cycle=S.session.cycle;S.week=S.session.week;S.activeDayId=S.session.dayId;}
+  else if(S.calendar){const c=coordinate(monday(today()));if(c){S.cycle=c.c;S.week=c.w;}S.activeDayId=todayDayId();}
 }
-
-function saveData() {
-  try {
-    localStorage.setItem("edzes_v2", JSON.stringify({ data: state.data, cycle: state.cycle, week: state.week }));
-    showToast();
-  } catch(e) {}
+function save(silent=false){
+  if(storageBlocked){updateSaveStatus();return false;}
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));storageIssue='';updateSaveStatus();if(!silent)showToast('Mentve ✓');return true;}
+  catch(e){storageIssue='Nem sikerült menteni. Exportáld az adatokat, mielőtt bezárod az appot.';updateSaveStatus();showToast('A mentés nem sikerült','red');return false;}
 }
-
-function getCell(cycleIdx, weekIdx, dayId, exName, setIdx) {
-  return state.data?.[cycleIdx]?.[weekIdx]?.[dayId]?.[exName]?.[setIdx] || {};
+function showToast(msg="Mentve ✓",cls=""){const el=document.getElementById("toast");el.textContent=msg;el.className="toast show "+cls;clearTimeout(toastT);toastT=setTimeout(()=>el.className="toast",1600);}
+function gc(c,w,d,e,s){return S.data?.[c]?.[w]?.[d]?.[e]?.[s]||{};}
+function sc(c,w,d,e,s,f,v){
+  S.data[c]??={};S.data[c][w]??={};S.data[c][w][d]??={};S.data[c][w][d][e]??={};S.data[c][w][d][e][s]??={done:false};
+  S.data[c][w][d][e][s][f]=v;save(true);
 }
-
-function setCell(cycleIdx, weekIdx, dayId, exName, setIdx, field, val) {
-  if (!state.data[cycleIdx]) state.data[cycleIdx] = {};
-  if (!state.data[cycleIdx][weekIdx]) state.data[cycleIdx][weekIdx] = {};
-  if (!state.data[cycleIdx][weekIdx][dayId]) state.data[cycleIdx][weekIdx][dayId] = {};
-  if (!state.data[cycleIdx][weekIdx][dayId][exName]) state.data[cycleIdx][weekIdx][dayId][exName] = {};
-  if (!state.data[cycleIdx][weekIdx][dayId][exName][setIdx]) state.data[cycleIdx][weekIdx][dayId][exName][setIdx] = {};
-  state.data[cycleIdx][weekIdx][dayId][exName][setIdx][field] = val;
-  saveData();
+function getPrev(c,w,d,e,s){
+  for(let i=c*4+w-1;i>=0;i--){const cell=gc(Math.floor(i/4),i%4,d,e,s);if(isDone(cell))return {...cell,previousIndex:i};}
+  return {};
 }
-
-function epley(suly, ism, rir) {
-  if (!suly || !ism) return null;
-  const totalReps = parseFloat(ism) + (parseFloat(rir) || 0);
-  return (parseFloat(suly) * (1 + totalReps / 30)).toFixed(1);
+function epley(su,is,ri){const w=parseFloat(su),r=parseFloat(is),rir=parseFloat(ri)||0;if(!w||!r)return null;return +(w*(1+(r+rir)/30)).toFixed(1);}
+function setVolume(cell){const w=parseFloat(cell.suly),r=parseFloat(cell.ism);return (w&&r)?w*r:0;}
+function getMaxCycle(){const keys=Object.keys(S.data||{}).map(Number).filter(n=>!Number.isNaN(n));return keys.length?Math.max(...keys,S.cycle):S.cycle;}
+function getExerciseCountInData(name,ci){let best={est:null};for(const week of Object.values(S.data[ci]||{}))for(const day of Object.values(week))for(const cell of Object.values(day[name]||{})){if(!isDone(cell))continue;const est=epley(cell.suly,cell.ism,cell.rir);if(est&&(!best.est||est>best.est))best={...cell,est};}return best;}
+function getOverallPR(ex){let best={est:null,ci:null};const maxC=getMaxCycle();for(let c=0;c<=maxC;c++){const b=getExerciseCountInData(ex,c);if(b.est&&(!best.est||b.est>best.est))best={est:b.est,ci:c};}return best;}
+function getCurrentWorkoutSets(day){const rows=[];day.exercises.forEach(ex=>{for(let s=0;s<ex.sets;s++){const c=gc(S.cycle,S.week,day.id,ex.name,s);if(isDone(c))rows.push({exercise:ex.name,set:s+1,suly:c.suly,ism:c.ism,rir:c.rir??'',volume:setVolume(c),est:epley(c.suly,c.ism,c.rir)});}});return rows;}
+function summarizeWorkout(day){
+ const rows=getCurrentWorkoutSets(day),volume=rows.reduce((a,r)=>a+r.volume,0),best=rows.filter(r=>r.est).sort((a,b)=>b.est-a.est)[0]||null;
+ const prev=[...S.workouts].reverse().find(w=>w.dayId===day.id&&!(w.cycle===S.cycle&&w.week===S.week));const prevVolume=prev?.summary?.volume||0;
+ let newPr=false;for(const row of rows){if(row.est>(S.prs[row.exercise]||0)){S.prs[row.exercise]=row.est;newPr=true;}}
+ return {dayId:day.id,dayName:day.name,date:new Date().toISOString(),cycle:S.cycle,week:S.week,totalSets:rows.length,totalReps:rows.reduce((a,r)=>a+Number(r.ism),0),volume:+volume.toFixed(1),best,newPr,prevVolume,change:prevVolume?+((volume-prevVolume)/prevVolume*100).toFixed(1):null};
 }
-
-function getPR(exName) {
-  let best = { suly: null, est1rm: null, cycle: null };
-  for (let c = 0; c < 3; c++) {
-    for (let w = 0; w < 4; w++) {
-      for (const day of PROGRAM.days) {
-        for (const ex of day.exercises) {
-          const name = ex.cycleVariant?.[c+1] || ex.name;
-          if (name !== exName && ex.name !== exName) continue;
-          for (let s = 0; s < ex.sets; s++) {
-            const cell = getCell(c, w, day.id, ex.name, s);
-            if (!cell.suly) continue;
-            const est = epley(cell.suly, cell.ism, cell.rir);
-            if (!best.est1rm || (est && parseFloat(est) > parseFloat(best.est1rm))) {
-              best = { suly: cell.suly, ism: cell.ism, rir: cell.rir, est1rm: est, cycle: c + 1 };
-            }
-          }
-        }
-      }
-    }
-  }
-  return best;
+function startSession(){
+ if(S.session)return resumeSession();
+ if(!S.calendar)return showToast('Először rendeld dátumhoz a korábbi heteket.','warn');
+ const existing=workoutFor(S.cycle,S.week,S.activeDayId);
+ if(existing&&!confirm('Ehhez a héthez és edzésnaphoz már van lezárt edzés. Megnyitod javításra? A befejezéskor az összesítés frissül.'))return;
+ const day=getDay(S.activeDayId);S.session={id:existing?.id||uid('workout'),dayId:day.id,startedAt:existing?.startedAt||new Date().toISOString(),cycle:S.cycle,week:S.week};S.lastSummary=null;save();render();
 }
-
-function getCycleBest(exName, cycleIdx) {
-  let best = { suly: null, ism: null, rir: null, est1rm: null };
-  for (let w = 0; w < 4; w++) {
-    for (const day of PROGRAM.days) {
-      for (const ex of day.exercises) {
-        if (ex.name !== exName) continue;
-        for (let s = 0; s < ex.sets; s++) {
-          const cell = getCell(cycleIdx, w, day.id, ex.name, s);
-          if (!cell.suly) continue;
-          const est = epley(cell.suly, cell.ism, cell.rir);
-          if (!best.est1rm || (est && parseFloat(est) > parseFloat(best.est1rm))) {
-            best = { suly: cell.suly, ism: cell.ism, rir: cell.rir, est1rm: est };
-          }
-        }
-      }
-    }
-  }
-  return best;
+function finishSession(){
+ if(!S.session)return;
+ S.cycle=S.session.cycle;S.week=S.session.week;S.activeDayId=S.session.dayId;
+ const day=getDay(S.session.dayId),rows=getCurrentWorkoutSets(day),planned=day.exercises.reduce((a,e)=>a+e.sets,0);
+ if(!rows.length)return showToast('Jelölj készre legalább egy sorozatot.','warn');
+ if(rows.length<planned&&!confirm(`${rows.length}/${planned} sorozat kész. Befejezed az edzést a kész sorozatokkal?`))return;
+ const summary=summarizeWorkout(day),workout={id:S.session.id,dayId:day.id,startedAt:S.session.startedAt,finishedAt:new Date().toISOString(),cycle:S.cycle,week:S.week,summary,sets:rows};
+ S.workouts=S.workouts.filter(w=>!(w.cycle===S.cycle&&w.week===S.week&&w.dayId===day.id));S.workouts.push(workout);
+ S.session=null;S.lastSummary=summary;S.timer.end=0;save();render();showToast('Edzés lezárva ✓');
 }
+function startTimer(sec,label){S.timer={end:Date.now()+sec*1000,duration:sec,label};save(true);render();}
+function stopTimer(){S.timer={end:0,duration:90,label:""};save(true);render();}
+function fmtTime(ms){const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,"0");const s=String(total%60).padStart(2,"0");return `${m}:${s}`;}
+function renderTimer(){const left=(S.timer.end||0)-Date.now();const done=!!S.timer.end&&left<=0;document.querySelectorAll(".js-timer-time").forEach(el=>{el.textContent=done?"KÉSZ":fmtTime(left);});document.querySelectorAll(".js-timer-card").forEach(card=>card.classList.toggle("done",done));}
+function scheduleTimer(){clearInterval(timerT);timerT=setInterval(renderTimer,500);}
+function isTimerFor(exName){return !!S.timer.end&&S.timer.label===exName;}
+function scrollActiveTimerIntoView(){const el=document.querySelector(".ex-block.active-timer");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}
 
-let toastTimer;
-function showToast() {
-  const t = document.getElementById("toast");
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 1500);
+function render(){document.getElementById('app').innerHTML=buildApp();attach();attachCalendar();scheduleTimer();renderTimer();updateSaveStatus();}
+function buildApp(){return buildHdr()+`<div class="storage-error" role="alert" ${storageIssue?'':'hidden'}>${esc(storageIssue)}</div>`+({attekintes:buildHome,mai:buildMai,naplo:buildNaplo,statisztika:buildStat,edzesterv:buildSettings}[S.view]||buildHome)()+buildFloatingTimer()+buildBnav();}
+function buildHdr(){const sub={attekintes:'Áttekintés',mai:'Edzés',naplo:'Heti napló',statisztika:'Statisztika',edzesterv:'Beállítások'}[S.view];return `<header class="hdr"><div class="hdr-top"><button class="logo logo-button" data-view="attekintes">Edző<em>Napló</em></button><span class="hdr-sub">${sub}</span><span class="save-status" role="status">Automatikus mentés</span></div>${['mai','naplo'].includes(S.view)?`<div class="selected-period"><button data-view="attekintes" class="tab">Naptár</button><div><strong>${selectedRange()}</strong><small>${cycleLabel(S.cycle,S.week)}</small></div><button class="tab" data-current="1" ${S.session?'disabled':''}>Most</button></div>`:''}</header>`;}
+function iconSvg(day){return `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" xmlns="http://www.w3.org/2000/svg">${ICONS[day.iconKey]||ICONS.generic}</svg>`;}
+function dayChips(){return `<div class="day-select">${S.program.map(d=>`<button class="day-chip ${d.id===S.activeDayId?'active':''}" data-day-select="${esc(d.id)}" ${S.session&&S.session.dayId!==d.id?'disabled':''}>${esc(d.name)}${workoutFor(S.cycle,S.week,d.id)?' ✓':''}</button>`).join('')}</div>`;}
+function buildMai(){const day=getDay(S.activeDayId),active=!!S.session,progress=dayProgress(S.cycle,S.week,day);return `<main class="content">${!S.calendar?buildMapping():''}<div class="focus-top"><div class="focus-card"><div class="focus-label">${isCurrentSelection()?'Aktuális hét':'Kiválasztott hét'} · ${dayDate(day)}</div><div class="focus-title">${esc(day.sub)}</div><div class="focus-sub">${esc(day.name)} · ${day.exercises.length} gyakorlat</div></div>${dayChips()}</div>${buildSessionBar(active,day)}<div class="progress-caption"><span id="workout-progress">${progress.done}/${progress.total} sorozat kész</span><span>Súly → ismétlés → kész</span></div><div class="progress-track"><div id="progress-fill" style="width:${progress.total?progress.done/progress.total*100:0}%"></div></div><div class="day-card open"><div class="day-exlist">${day.exercises.map(ex=>buildEx(ex,day.id,true)).join('')||'<p class="empty-note">A Terv nézetben adj gyakorlatot ehhez az edzésnaphoz.</p>'}</div></div>${S.lastSummary?buildSummary(S.lastSummary):''}</main>`;}
+function buildSessionBar(active,day){const existing=workoutFor(S.cycle,S.week,day.id);return `<div class="session-bar"><div class="session-state ${active?'live':''}">${active?'Edzés folyamatban · bezárás után is folytatható':existing?'Lezárt edzés · az adatok javíthatók':'Indítsd el az edzést a rögzítéshez'}</div><div class="btn-row">${active?`<button class="btn green" id="finish-workout">Edzés befejezése</button>`:`<button class="btn primary" id="start-workout" ${!S.calendar?'disabled':''}>${existing?'Edzés javítása':'Edzés indítása'}</button>`}<button class="btn light" data-view-jump="naplo">Heti napló</button></div>${active?'<button class="text-btn" id="cancel-session">Edzés megszakítása</button>':''}</div>`;}
+function buildTimer(){const running=S.timer.end&&S.timer.end>Date.now();return `<div class="timer-card js-timer-card"><div><div class="timer-title">Pihenőidő ${S.timer.label?`· ${esc(S.timer.label)}`:""}</div><div class="timer-time js-timer-time">${running?fmtTime(S.timer.end-Date.now()):"00:00"}</div></div><div class="timer-controls"><button class="btn" data-timer="60">60</button><button class="btn" data-timer="90">90</button><button class="btn" data-timer="120">120</button><button class="btn" data-timer="180">180</button><button class="btn" id="stop-timer">Stop</button></div></div>`;}
+function buildInlineTimer(){return "";}
+function buildFloatingTimer(){if(!S.timer.end)return "";return `<div class="floating-timer js-timer-card" data-scroll-active-timer="1"><div><div class="floating-timer-title">${esc(S.timer.label||"pihenő")}</div><div class="floating-timer-time js-timer-time">${fmtTime(S.timer.end-Date.now())}</div></div><div class="floating-timer-actions"><button class="btn" data-timer="90">+90</button><button class="btn" id="stop-timer-floating">Stop</button></div></div>`;}
+function buildSummary(s){return `<div class="summary-card"><div class="summary-title">Utolsó edzés összegzés</div><div class="summary-grid"><div class="metric"><div class="metric-label">Szett</div><div class="metric-val">${s.totalSets}</div></div><div class="metric"><div class="metric-label">Ismétlés</div><div class="metric-val">${s.totalReps}</div></div><div class="metric"><div class="metric-label">Volumen</div><div class="metric-val">${s.volume} kg</div></div><div class="metric"><div class="metric-label">Változás</div><div class="metric-val">${s.change===null?'–':(s.change>0?'+':'')+s.change+'%'}</div></div></div><div class="summary-note">${s.best?`Legjobb szett: ${esc(s.best.exercise)} · ${esc(s.best.suly)}kg ×${esc(s.best.ism)} @${esc(s.best.rir||0)} · ~${s.best.est}kg 1RM`:'Nincs értékelhető szett.'}${s.newPr?' 🏆 Új PR!':''}</div></div>`;}
+function buildNaplo(){return `<main class="content"><div class="section-title">${selectedRange()}</div><p class="helper">Nyisd le a napokat az áttekintéshez. Módosításhoz válaszd az „Edzés megnyitása” gombot.</p>${S.program.map(d=>buildDay(d)).join('')}</main>`;}
+function buildDay(day){const isOpen=!!S.openDays[day.id],p=dayProgress(S.cycle,S.week,day);return `<div class="day-card ${isOpen?'open':''}"><button class="day-hdr" data-day="${esc(day.id)}" aria-expanded="${isOpen}"><span class="day-icon-wrap ${day.ic}">${iconSvg(day)}</span><span class="day-info"><span class="day-name">${esc(day.name)} · ${esc(day.sub)}</span><span class="day-sub">${dayDate(day)} · ${p.done}/${p.total} sorozat${workoutFor(S.cycle,S.week,day.id)?' · Lezárva ✓':''}</span></span><span class="day-chevron">${isOpen?'−':'+'}</span></button><div class="day-exlist"><div class="open-workout"><button class="btn primary" data-open-day="${esc(day.id)}">Edzés megnyitása</button></div>${day.exercises.map(ex=>buildEx(ex,day.id,false)).join('')}</div></div>`;}
+function buildEx(ex,dayId,focus){
+ const canEdit=focus&&S.session&&S.session.dayId===dayId&&S.session.cycle===S.cycle&&S.session.week===S.week;
+ const activeTimer=isTimerFor(ex.name);let rows='';
+ for(let s=0;s<ex.sets;s++){
+  const cell=gc(S.cycle,S.week,dayId,ex.name,s),prev=getPrev(S.cycle,S.week,dayId,ex.name,s),done=isDone(cell);
+  const attrs=`data-day="${esc(dayId)}" data-ex="${esc(ex.name)}" data-set="${s}"`;
+  rows+=`<div class="set-row ${done?'is-done':''}"><div class="set-lbl">${s+1}</div><input aria-label="${esc(ex.name)} ${s+1}. sorozat súly kg" class="set-inp" type="number" min="0" step="any" inputmode="decimal" placeholder="kg" value="${esc(cell.suly??'')}" ${attrs} data-field="suly" ${canEdit?'':'disabled'}><input aria-label="${esc(ex.name)} ${s+1}. sorozat ismétlés" class="set-inp" type="number" min="1" step="1" inputmode="numeric" placeholder="ism." value="${esc(cell.ism??'')}" ${attrs} data-field="ism" ${canEdit?'':'disabled'}><select aria-label="${esc(ex.name)} ${s+1}. sorozat RIR" class="set-inp rir" ${attrs} data-field="rir" ${canEdit?'':'disabled'}><option value="">–</option>${[0,1,2,3,4,5].map(r=>`<option value="${r}" ${String(cell.rir??'')===String(r)?'selected':''}>${r}</option>`).join('')}</select><button class="done-btn ${done?'checked':''}" ${attrs} data-done="1" aria-label="${s+1}. sorozat ${done?'kész jelölés visszavonása':'készre jelölése'}" aria-pressed="${done}" ${canEdit?'':'disabled'}>${done?'✓':'○'}</button></div><div class="previous-row"><span>${prev.ism?`Előző: ${esc(prev.suly)} kg × ${esc(prev.ism)}${prev.rir!==undefined&&prev.rir!==''?` · RIR ${esc(prev.rir)}`:''} · ${previousDate(prev.previousIndex)}`:'Még nincs korábbi sorozat'}</span>${prev.ism&&canEdit?`<button class="copy-btn" ${attrs} data-copy="1" ${done?'disabled':''}>Átvesz</button>`:''}</div>`;
+ }
+ return `<section class="ex-block ${activeTimer?'active-timer':''}"><div class="ex-top"><div class="ex-name">${esc(ex.name)}</div>${canEdit?`<div class="ex-action-row">${activeTimer?`<span class="ex-timer-pill js-timer-card js-timer-time"></span>`:''}<button class="btn small light" data-rest-label="${esc(ex.name)}">Pihenő</button></div>`:''}</div><div class="col-hdr"><span>#</span><span>kg</span><span>Ism.</span><span title="Tartalékban maradt ismétlések">RIR</span><span>Kész</span></div>${rows}</section>`;
 }
+function buildStat(){const names=allExerciseNames();const maxC=getMaxCycle();return `<div class="pr-page"><div class="section-title" style="margin-top:0">Személyes rekordok</div>${S.workouts.length?`<div class="summary-card"><div class="summary-title">Lezárt edzések: ${S.workouts.length}</div><div class="summary-note">Legutóbbi: ${esc(S.workouts[S.workouts.length-1].summary.dayName)} · ${new Date(S.workouts[S.workouts.length-1].finishedAt).toLocaleString('hu-HU')}</div></div>`:""}${names.map(exName=>{let hasAny=false;const pr=getOverallPR(exName);let cols="";for(let c=0;c<=maxC;c++){const b=getExerciseCountInData(exName,c);if(b.suly)hasAny=true;const isPR=pr.ci===c&&b.est;cols+=`<div class="pr-cyc"><div class="pr-cyc-lbl">C${c+1}${isPR?' 🏆':''}</div><div class="pr-1rm ${isPR?'is-pr':''}">${b.est?b.est+'kg':'–'}</div><div class="pr-sub">${b.suly?esc(b.suly)+'kg':''}${b.ism?` ×${esc(b.ism)}`:''}${b.rir!==undefined&&b.rir!==''&&b.rir!==null?' @'+esc(b.rir):''}</div></div>`;}return `<div class="pr-card"><div class="pr-card-hdr"><div class="pr-ex">${esc(exName)}</div>${pr.est?`<div class="pr-badge">PR ~${pr.est}kg</div>`:""}</div>${hasAny?`<div class="pr-cycles">${cols}</div>`:`<div class="pr-empty">Még nincs adat</div>`}</div>`;}).join("")}</div>`;}
+function buildSettings(){return `<main class="settings-page"><div class="settings-card settings-pad"><h2>Adatmentés</h2><p class="helper">Az edzések ebben a böngészőben tárolódnak. Másik eszközre vagy fájlba költözéshez mentsd ki, majd töltsd vissza a JSON fájlt.</p><div class="btn-row"><button class="btn primary" id="export-data">Mentés letöltése</button><label class="btn light" for="import-data">Mentés visszatöltése</label><input id="import-data" type="file" accept=".json,application/json" hidden></div></div><div class="settings-card settings-pad"><h2>Pihenő és rögzítés</h2><label class="settings-field">Pihenőidő <select id="rest-duration" class="edit-inp">${[60,90,120,180].map(t=>`<option value="${t}" ${S.prefs.rest===t?'selected':''}>${t} másodperc</option>`).join('')}</select></label><label class="settings-field"><input type="checkbox" id="auto-rest" ${S.prefs.autoRest?'checked':''}> Pihenő induljon a sorozat készre jelölésekor</label><p class="helper">A RIR a tartalékban maradt ismétlések száma. Opcionális. A 0 kg saját testsúlyos sorozatot is jelölhet.</p></div>${buildMapping(true)}${S.session?'<div class="settings-info">Az edzéstervet a folyamatban lévő edzés befejezése után szerkesztheted.</div>':`<div class="settings-info"><strong>Edzésterv.</strong> Az átnevezés megőrzi a naplóadatokat. A törölt gyakorlatok korábbi eredményei a statisztikában továbbra is megmaradnak.</div><div class="settings-card"><div class="settings-card-hdr"><h2>Napok és gyakorlatok</h2><button class="btn small primary" id="add-day">+ Nap</button></div>${S.program.map((d,di)=>buildSettingsDay(d,di)).join('')}</div><div class="danger-zone"><button class="btn red full" id="reset-program">Edzésterv visszaállítása alapra</button></div>`}</main>`;}
+function buildSettingsDay(d,di){return `<div class="settings-day"><div class="settings-line"><input class="edit-inp" value="${esc(d.name)}" data-edit-day="${di}" data-field="name" placeholder="Nap neve"><input class="edit-inp" value="${esc(d.sub)}" data-edit-day="${di}" data-field="sub" placeholder="Alcím"></div><div class="btn-row"><button class="btn small light" data-move-day="${di}" data-dir="-1">↑ Nap</button><button class="btn small light" data-move-day="${di}" data-dir="1">↓ Nap</button><button class="btn small red" data-del-day="${di}">Törlés</button></div>${d.exercises.map((e,ei)=>`<div class="settings-ex"><input class="edit-inp" value="${esc(e.name)}" data-edit-ex="${di}:${ei}" data-field="name" placeholder="Gyakorlat"><input class="edit-inp" type="number" inputmode="numeric" value="${esc(e.sets)}" data-edit-ex="${di}:${ei}" data-field="sets" placeholder="Szett"><div class="settings-actions"><button class="btn small light" data-move-ex="${di}:${ei}" data-dir="-1">↑</button><button class="btn small light" data-move-ex="${di}:${ei}" data-dir="1">↓</button><button class="btn small red" data-del-ex="${di}:${ei}">Törlés</button></div></div>`).join("")}<div class="add-box"><input class="edit-inp" data-new-ex="${di}" placeholder="Új gyakorlat neve"><button class="btn primary" data-add-ex="${di}">Hozzáad</button></div></div>`;}
+function buildBnav(){return `<nav class="bnav" aria-label="Fő navigáció">${[['attekintes','Naptár','M4 5h16v15H4z M8 3v4 M16 3v4 M4 10h16'],['mai','Edzés','M3 9v6 M7 6v12 M7 12h10 M17 6v12 M21 9v6'],['naplo','Napló','M5 3h14v18H5z M8 8h8 M8 12h8 M8 16h5'],['statisztika','Stat','M4 20V10 M10 20V4 M16 20v-7 M22 20H2'],['edzesterv','Terv','M4 6h16 M4 12h16 M4 18h16 M8 4v4 M16 10v4 M10 16v4']].map(([v,l,path])=>`<button class="bnav-btn ${S.view===v?'active':''}" data-view="${v}" ${S.view===v?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="${path}" stroke-linecap="round" stroke-linejoin="round"/></svg>${l}</button>`).join('')}</nav>`;}
+function move(arr,i,dir){const j=i+dir;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];}
+function attach(){
 
-function render() {
-  document.getElementById("app").innerHTML = buildApp();
-  attachEvents();
-}
-
-function buildApp() {
-  return `
-    ${buildHeader()}
-    ${state.view === "naplo" ? buildNaplo() : buildStatisztika()}
-    ${buildBottomNav()}
-  `;
-}
-
-function buildHeader() {
-  if (state.view === "statisztika") {
-    return `
-      <div class="app-header">
-        <div class="header-top">
-          <div class="app-title">Edző<span>Napló</span></div>
-          <div style="font-size:13px;color:var(--text2);">Statisztika & PR</div>
-        </div>
-      </div>`;
-  }
-  return `
-    <div class="app-header">
-      <div class="header-top">
-        <div class="app-title">Edző<span>Napló</span></div>
-      </div>
-      <div class="tab-row" id="cycle-tabs">
-        ${PROGRAM.cycles.map((c, i) => `<button class="tab ${i===state.cycle?'active':''}" data-type="cycle" data-idx="${i}">${c}</button>`).join("")}
-      </div>
-      <div class="tab-row" id="week-tabs">
-        ${PROGRAM.weeks.map((w, i) => `<button class="tab ${i===state.week?'active':''}" data-type="week" data-idx="${i}">${w}</button>`).join("")}
-      </div>
-    </div>`;
-}
-
-function buildNaplo() {
-  return `<div class="content">${PROGRAM.days.map(day => buildDayBlock(day)).join("")}</div>`;
-}
-
-function buildDayBlock(day) {
-  const isOpen = state.openDays[day.id];
-  return `
-    <div class="day-block ${isOpen ? 'open' : ''}" id="day-${day.id}">
-      <div class="day-header" data-day="${day.id}">
-        <div class="day-dot ${day.dot}"></div>
-        <div class="day-name">${day.name}</div>
-        <div class="day-chevron">▾</div>
-      </div>
-      <div class="day-exercises">
-        ${day.exercises.map(ex => buildExercise(ex, day.id)).join("")}
-      </div>
-    </div>`;
-}
-
-function buildExercise(ex, dayId) {
-  const exName = ex.cycleVariant?.[state.cycle + 1] || ex.name;
-  const rows = [];
-  for (let s = 0; s < ex.sets; s++) {
-    const cell = getCell(state.cycle, state.week, dayId, ex.name, s);
-    rows.push(`
-      <div class="set-row">
-        <div class="set-label">S${s+1}</div>
-        <input class="set-input" type="number" inputmode="decimal" placeholder="kg"
-          value="${cell.suly || ''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="suly">
-        <input class="set-input" type="number" inputmode="numeric" placeholder="ism"
-          value="${cell.ism || ''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="ism">
-        <input class="set-input rir-input" type="number" inputmode="numeric" placeholder="RIR"
-          value="${cell.rir !== undefined && cell.rir !== '' ? cell.rir : ''}"
-          data-day="${dayId}" data-ex="${ex.name}" data-set="${s}" data-field="rir">
-      </div>`);
-  }
-  return `
-    <div class="exercise-block">
-      <div class="ex-name">${exName}</div>
-      <div class="col-headers">
-        <div></div>
-        <div class="col-h">Súly (kg)</div>
-        <div class="col-h">Ismétlés</div>
-        <div class="col-h">RIR</div>
-      </div>
-      ${rows.join("")}
-    </div>`;
-}
-
-function buildStatisztika() {
-  const cards = PROGRAM.prExercises.map(exName => {
-    const c1 = getCycleBest(exName, 0);
-    const c2 = getCycleBest(exName, 1);
-    const c3 = getCycleBest(exName, 2);
-    const hasAny = c1.suly || c2.suly || c3.suly;
-    if (!hasAny) return `
-      <div class="pr-card">
-        <div class="pr-card-header"><div class="pr-ex-name">${exName}</div></div>
-        <div class="empty-pr">Még nincs adat</div>
-      </div>`;
-
-    const pr = getPR(exName);
-
-    function cycleCol(data, cIdx) {
-      if (!data.suly) return `<div class="pr-cycle"><div class="pr-cycle-label">C${cIdx+1}</div><div style="color:var(--text3);font-size:13px;padding:8px 0">–</div></div>`;
-      const isPR = pr.cycle === cIdx + 1;
-      return `
-        <div class="pr-cycle">
-          <div class="pr-cycle-label">C${cIdx+1}${isPR ? ' 🏆' : ''}</div>
-          <div class="pr-1rm" style="${isPR ? '' : 'color:var(--text2);font-size:15px'}">${data.est1rm ? data.est1rm+'kg' : '–'}</div>
-          <div class="pr-sub">${data.suly}kg × ${data.ism || '?'}${data.rir !== undefined && data.rir !== '' ? ' @'+data.rir : ''}</div>
-        </div>`;
-    }
-
-    return `
-      <div class="pr-card">
-        <div class="pr-card-header">
-          <div class="pr-ex-name">${exName}${pr.est1rm ? `<span class="pr-badge">~1RM: ${pr.est1rm}kg</span>` : ''}</div>
-        </div>
-        <div class="pr-stats">
-          ${cycleCol(c1, 0)}
-          ${cycleCol(c2, 1)}
-          ${cycleCol(c3, 2)}
-        </div>
-      </div>`;
+  document.querySelectorAll('[data-view],[data-view-jump]').forEach(b=>b.onclick=()=>{S.view=b.dataset.view||b.dataset.viewJump;render();window.scrollTo(0,0);});
+  document.querySelectorAll('[data-day-select]').forEach(b=>b.onclick=()=>{if(S.session&&b.dataset.daySelect!==S.session.dayId)return;S.activeDayId=b.dataset.daySelect;save(true);render();});
+  document.querySelectorAll('[data-day]').forEach(b=>{if(b.classList.contains('day-hdr'))b.onclick=()=>{S.openDays[b.dataset.day]=!S.openDays[b.dataset.day];save(true);render();};});
+  document.querySelectorAll('.set-inp').forEach(inp=>{
+   inp.addEventListener('input',()=>{const {day,ex,set,field}=inp.dataset;const val=inp.value;
+    if(val!==''&&(!Number.isFinite(Number(val))||Number(val)<0||(field==='ism'&&(!Number.isInteger(Number(val))||Number(val)<1)))){inp.setCustomValidity('Adj meg érvényes, nem negatív értéket; az ismétlés pozitív egész.');inp.reportValidity();return;}
+    inp.setCustomValidity('');const cell=gc(S.cycle,S.week,day,ex,+set);cell.done=false;
+    sc(S.cycle,S.week,day,ex,+set,field,val);const row=inp.closest('.set-row');row.classList.remove('is-done');const btn=row.querySelector('[data-done]');btn.classList.remove('checked');btn.textContent='○';btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${Number(set)+1}. sorozat készre jelölése`);row.nextElementSibling?.querySelector('[data-copy]')?.removeAttribute('disabled');updateProgress();
+   });
+   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const inputs=[...document.querySelectorAll('.set-inp:not(:disabled),[data-done]:not(:disabled)')];inputs[inputs.indexOf(inp)+1]?.focus();}});
   });
-  return `<div class="pr-page">${cards.join("")}</div>`;
+  document.getElementById('start-workout')?.addEventListener('click',startSession);document.getElementById('finish-workout')?.addEventListener('click',finishSession);
+  document.querySelectorAll('[data-timer]').forEach(b=>b.onclick=e=>{e.stopPropagation();S.timer.end=Math.max(Date.now(),S.timer.end||0)+Number(b.dataset.timer)*1000;save(true);render();});
+  document.querySelectorAll('[data-rest-label]').forEach(b=>b.onclick=()=>startTimer(S.prefs.rest,b.dataset.restLabel));
+  document.querySelectorAll('#stop-timer,#stop-timer-inline,#stop-timer-floating').forEach(b=>b.onclick=e=>{e.stopPropagation();stopTimer();});
+  document.querySelectorAll('[data-scroll-active-timer]').forEach(b=>b.onclick=scrollActiveTimerIntoView);
+  document.getElementById("add-day")?.addEventListener("click",()=>{const id=uid("nap");S.program.push({id,name:"Új nap",sub:"Edzés",ic:"ic-generic",iconKey:"generic",exercises:[]});S.activeDayId=id;save();render();});
+  document.getElementById("reset-program")?.addEventListener("click",()=>{if(confirm("Biztosan visszaállítod az alap edzéstervet? A rögzített edzésadatok megmaradnak.")){S.program=clone(DEFAULT_PROGRAM);S.activeDayId=todayDayId();save();render();}});
+  document.querySelectorAll("[data-edit-day]").forEach(inp=>inp.onchange=()=>{const d=S.program[+inp.dataset.editDay];if(d){d[inp.dataset.field]=inp.value.trim()||d[inp.dataset.field];save();render();}});
+  document.querySelectorAll("[data-move-day]").forEach(b=>b.onclick=()=>{move(S.program,+b.dataset.moveDay,+b.dataset.dir);save();render();});
+  document.querySelectorAll("[data-del-day]").forEach(b=>b.onclick=()=>{if(S.program.length<=1)return showToast("Legalább egy nap kell","warn");if(confirm("Törlöd ezt az edzésnapot?")){S.program.splice(+b.dataset.delDay,1);S.activeDayId=S.program[0].id;save();render();}});
+  document.querySelectorAll("[data-edit-ex]").forEach(inp=>inp.onchange=()=>{const[di,ei]=inp.dataset.editEx.split(":").map(Number);const e=S.program[di]?.exercises[ei];if(!e)return;if(inp.dataset.field==="sets")e.sets=Math.min(50,Math.max(1,parseInt(inp.value)||1));else {const name=inp.value.trim();if(!name)return render();if(['__proto__','constructor','prototype'].includes(name)||S.program[di].exercises.some((x,i)=>i!==ei&&x.name===name)){showToast('Ez a gyakorlatnév már szerepel vagy nem használható.','warn');return render();}renameExercise(S.program[di].id,e.name,name);e.name=name;}save();render();});
+  document.querySelectorAll("[data-move-ex]").forEach(b=>b.onclick=()=>{const[di,ei]=b.dataset.moveEx.split(":").map(Number);move(S.program[di].exercises,ei,+b.dataset.dir);save();render();});
+  document.querySelectorAll("[data-del-ex]").forEach(b=>b.onclick=()=>{const[di,ei]=b.dataset.delEx.split(":").map(Number);if(confirm("Törlöd ezt a gyakorlatot?")){S.program[di].exercises.splice(ei,1);save();render();}});
+  document.querySelectorAll("[data-add-ex]").forEach(b=>b.onclick=()=>{const di=+b.dataset.addEx;const inp=document.querySelector(`[data-new-ex="${di}"]`);const name=(inp?.value||"").trim();if(!name)return showToast("Adj meg gyakorlatnevet","warn");if(["__proto__","constructor","prototype"].includes(name)||S.program[di].exercises.some(e=>e.name===name))return showToast("Válassz egyedi gyakorlatnevet","warn");S.program[di].exercises.push({name,sets:2});save();render();});
+}
+// Calendar dates are UTC date-only values; today's date uses the device's timezone.
+const MONTHS=['Január','Február','Március','Április','Május','Június','Július','Augusztus','Szeptember','Október','November','December'];
+const DAY_OFFSETS={hetfo:0,kedd:1,szerda:2,csutortok:3,pentek:4,szombat:5,vasarnap:6};
+let storageIssue='',storageBlocked=false;
+let calendarYear=new Date().getFullYear(),calendarMonth=new Date().getMonth();
+function today(){const n=new Date();return new Date(Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()));}
+function dateKey(d){return d.toISOString().slice(0,10);}
+function parseDate(v){if(typeof v!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v))return null;const d=new Date(v+'T00:00:00Z');return Number.isFinite(+d)&&dateKey(d)===v?d:null;}
+function addDays(d,n){const a=new Date(d);a.setUTCDate(a.getUTCDate()+n);return a;}
+function monday(d){return addDays(d,-((d.getUTCDay()+6)%7));}
+function shortDate(d){return d.toLocaleDateString('hu-HU',{month:'short',day:'numeric',timeZone:'UTC'});}
+function dateRange(d){const end=addDays(d,6);return `${d.getUTCFullYear()}. ${shortDate(d)} – ${end.getUTCFullYear()!==d.getUTCFullYear()?end.getUTCFullYear()+'. ':''}${shortDate(end)}`;}
+function isoWeek(d){const th=addDays(monday(d),3),start=new Date(Date.UTC(th.getUTCFullYear(),0,1));return Math.ceil(((th-start)/86400000+1)/7);}
+function coordinate(d){if(!S.calendar)return null;const n=Math.round((monday(d)-parseDate(S.calendar.anchor))/604800000);return n<0?null:{c:Math.floor(n/4),w:n%4};}
+function weekDate(c,w){return S.calendar?addDays(parseDate(S.calendar.anchor),(c*4+w)*7):null;}
+function cycleLabel(c,w){return `${c+1}. ciklus · ${w+1}/4. hét`;}
+function selectedRange(){const d=weekDate(S.cycle,S.week);return d?dateRange(d):'Dátum még nincs hozzárendelve';}
+function previousDate(index){const d=weekDate(Math.floor(index/4),index%4);return d?shortDate(d):`${Math.floor(index/4)+1}. ciklus, ${index%4+1}. hét`;}
+function dayDate(day){const d=weekDate(S.cycle,S.week);return d&&DAY_OFFSETS[day.id]!==undefined?shortDate(addDays(d,DAY_OFFSETS[day.id])):'Heti edzésnap';}
+function isCurrentSelection(){const c=coordinate(today());return c&&c.c===S.cycle&&c.w===S.week;}
+function hasHistory(){return Object.keys(S.data||{}).length>0||S.workouts.length>0||!!S.session;}
+function isValidSet(c){return c.suly!==''&&c.suly!==undefined&&c.suly!==null&&Number.isFinite(Number(c.suly))&&Number(c.suly)>=0&&Number.isInteger(Number(c.ism))&&Number(c.ism)>0;}
+function isDone(c){return isValidSet(c)&&c.done!==false;}
+function workoutFor(c,w,d){return S.workouts.find(x=>x.cycle===c&&x.week===w&&x.dayId===d);}
+function dayProgress(c,w,day){let done=0,total=0;for(const ex of day.exercises)for(let i=0;i<ex.sets;i++){total++;if(isDone(gc(c,w,day.id,ex.name,i)))done++;}return {done,total};}
+function weekProgress(c,w){let sets=0;for(const day of Object.values(S.data[c]?.[w]||{}))for(const ex of Object.values(day))for(const cell of Object.values(ex))if(isDone(cell))sets++;return {sets,finished:S.workouts.filter(x=>x.cycle===c&&x.week===w).length};}
+function updateProgress(){const p=dayProgress(S.cycle,S.week,getDay(S.activeDayId));const label=document.getElementById('workout-progress');if(label)label.textContent=`${p.done}/${p.total} sorozat kész`;const bar=document.getElementById('progress-fill');if(bar)bar.style.width=(p.total?p.done/p.total*100:0)+'%';}
+function updateSaveStatus(){const el=document.querySelector('.save-status');if(el){el.textContent=storageIssue?'Mentési hiba':'Mentve ezen az eszközön';el.classList.toggle('failed',!!storageIssue);}const banner=document.querySelector('.storage-error');if(banner){banner.hidden=!storageIssue;banner.textContent=storageIssue;}}
+function buildMapping(settings=false){
+ if(S.calendar&&!settings)return '';
+ const mapping=S.calendar?`Az 1. ciklus első hétfője: <strong>${esc(S.calendar.anchor)}</strong>. A ciklusok 4 hetesek, hétfőtől vasárnapig.`:'A korábbi ciklusoknál nem volt naptári dátum. Válassz egy ismert ciklust és hetet, majd add meg annak egyik napját. A hétfőt automatikusan kiszámítjuk.';
+ return `<section class="settings-card settings-pad mapping-card"><h2>${S.calendar?'Ciklusok naptári kezdete':'Egyszeri dátum-hozzárendelés'}</h2><p class="helper">${mapping}</p>${S.session?'<p class="helper">A dátum-hozzárendelés a folyamatban lévő edzés befejezése után módosítható.</p>':`<details ${S.calendar?'':'open'}><summary>${S.calendar?'Dátum-hozzárendelés módosítása':'Korábbi hét összekapcsolása'}</summary><div class="mapping-fields"><label>Ciklus<input id="map-cycle" class="edit-inp" type="number" min="1" max="1000" value="${S.cycle+1}"></label><label>Hét<select id="map-week" class="edit-inp">${[0,1,2,3].map(w=>`<option value="${w}" ${w===S.week?'selected':''}>${w+1}. hét</option>`).join('')}</select></label><label class="date-field">Ezen a héten egy dátum<input id="map-date" class="edit-inp" type="date" value="${S.calendar?dateKey(weekDate(S.cycle,S.week)):''}"></label></div><p id="mapping-preview" class="helper">A rögzített sorozatok változatlanul megmaradnak.</p><button class="btn primary" id="save-mapping">Dátum-hozzárendelés mentése</button></details>`}</section>`;
+}
+function buildHome(){
+ const now=monday(today()),current=coordinate(now),p=current?weekProgress(current.c,current.w):{sets:0,finished:0};
+ const first=new Date(Date.UTC(calendarYear,calendarMonth,1)),end=new Date(Date.UTC(calendarYear,calendarMonth+1,0));
+ let weeks='';for(let d=monday(first);d<=end;d=addDays(d,7)){
+  const c=coordinate(d),pr=c?weekProgress(c.c,c.w):{sets:0,finished:0},isNow=+d===+now,selected=c&&c.c===S.cycle&&c.w===S.week;
+  weeks+=`<button class="week-card ${isNow?'current':''} ${selected?'selected':''}" data-week-date="${dateKey(d)}" ${!c?'disabled':''}><span class="week-number">${isoWeek(d)}<small>hét</small></span><span class="week-content"><strong>${dateRange(d)}</strong><span>${c?cycleLabel(c.c,c.w):S.calendar?'A ciklusok kezdete előtt':'Előbb dátum-hozzárendelés szükséges'}</span><span class="week-progress">${pr.finished?`${pr.finished} lezárt edzés · `:''}${pr.sets?`${pr.sets} kész sorozat`:'Még nincs rögzítés'}</span></span><span class="week-end">${isNow?'<span class="badge">Aktuális</span>':''}<span aria-hidden="true">›</span></span></button>`;
+ }
+ const minYear=Math.min(2026,today().getUTCFullYear(),S.calendar?Math.max(2026,parseDate(S.calendar.anchor).getUTCFullYear()):2026),maxYear=Math.max(2027,today().getUTCFullYear()+1,calendarYear);
+ return `<main class="content home-page"><div class="page-heading"><div><p class="eyebrow">${today().toLocaleDateString('hu-HU',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'})}</p><h1>Edzéseid, hétről hétre.</h1></div></div>${S.session?`<section class="resume-card"><div><strong>Van egy megkezdett edzésed</strong><p>${esc(getDay(S.session.dayId).sub)} · ${cycleLabel(S.session.cycle,S.session.week)}</p></div><button class="btn primary" id="resume-session">Folytatás</button></section>`:''}${!S.calendar?buildMapping():''}<section class="current-week-card"><div class="current-week-top"><span class="eyebrow">Aktuális hét</span><span class="current-week-count">${isoWeek(now)}. hét</span></div><h2>${dateRange(now)}</h2><p>${current?cycleLabel(current.c,current.w):'Állítsd be a ciklusok kezdődátumát a Terv nézetben.'}</p><div class="current-week-bottom"><span>${p.finished} lezárt edzés <span class="dot-separator">·</span> ${p.sets} kész sorozat</span><button class="btn" data-current="1" ${!current?'disabled':''}>${S.session?'Edzés folytatása':'Aktuális hét megnyitása'} <span aria-hidden="true">→</span></button></div></section><section class="calendar-panel" aria-label="Edzésnaptár"><div class="calendar-heading"><h2>Edzésnaptár</h2><button class="text-btn" id="calendar-today">Vissza a mai héthez</button></div><div class="year-tabs" aria-label="Év">${Array.from({length:maxYear-minYear+1},(_,i)=>minYear+i).map(y=>`<button class="year-tab ${y===calendarYear?'active':''}" data-year="${y}" aria-pressed="${y===calendarYear}">${y}</button>`).join('')}</div><div class="month-grid" aria-label="Hónap">${MONTHS.map((m,i)=>`<button class="month-btn ${i===calendarMonth?'active':''} ${calendarYear===today().getUTCFullYear()&&i===today().getUTCMonth()?'this-month':''}" data-month="${i}" aria-pressed="${i===calendarMonth}">${m}</button>`).join('')}</div><div class="month-heading"><h3>${calendarYear}. ${MONTHS[calendarMonth].toLowerCase()}</h3><span>Hétfő – vasárnap</span></div><div class="week-list">${weeks}</div><p class="calendar-note">A hónaphatáron átnyúló hét mindkét hónapban látszik, ugyanazokkal az adatokkal.</p></section></main>`;
+}
+function openWeek(d){if(S.session){showToast('Előbb fejezd be a folyamatban lévő edzést.','warn');return;}const c=coordinate(d);if(!c)return;S.cycle=c.c;S.week=c.w;S.activeDayId=todayDayId();S.view='mai';S.lastSummary=null;save(true);render();window.scrollTo(0,0);}
+function resumeSession(){if(!S.session)return;S.cycle=S.session.cycle;S.week=S.session.week;S.activeDayId=S.session.dayId;S.view='mai';render();window.scrollTo(0,0);}
+function safeReviver(key,value){if(['__proto__','constructor','prototype'].includes(key))throw Error('Tiltott kulcs');return value;}
+function validateBackup(p){
+ const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),index=(x,max)=>Number.isInteger(Number(x))&&Number(x)>=0&&Number(x)<=max;
+ if(!obj(p)||!obj(p.data))throw Error('Hiányzik a naplóadat.');
+ if(p.calendar&&(!parseDate(p.calendar.anchor)||dateKey(monday(parseDate(p.calendar.anchor)))!==p.calendar.anchor))throw Error('Hibás kezdődátum.');
+ if(p.cycle!==undefined&&!index(p.cycle,1000)||p.week!==undefined&&!index(p.week,3))throw Error('Hibás hét.');
+ for(const [ci,cycle] of Object.entries(p.data)){if(!index(ci,1000)||!obj(cycle))throw Error('Hibás ciklus.');for(const [wi,week] of Object.entries(cycle)){if(!index(wi,3)||!obj(week))throw Error('Hibás hét.');for(const day of Object.values(week)){if(!obj(day))throw Error('Hibás nap.');for(const ex of Object.values(day)){if(!obj(ex))throw Error('Hibás gyakorlat.');for(const [si,cell] of Object.entries(ex)){if(!index(si,500)||!obj(cell))throw Error('Hibás sorozat.');for(const f of ['suly','ism','rir'])if(cell[f]!==undefined&&cell[f]!==null&&cell[f]!==''&&(!['string','number'].includes(typeof cell[f])||!Number.isFinite(Number(cell[f]))||Number(cell[f])<0))throw Error('Hibás sorozatérték.');}}}}}
+ if(p.program!==undefined&&(!Array.isArray(p.program)||!p.program.length||p.program.some(d=>!obj(d)||typeof d.id!=='string'||['__proto__','constructor','prototype'].includes(d.id)||typeof d.name!=='string'||!Array.isArray(d.exercises)||d.exercises.some(e=>!obj(e)||typeof e.name!=='string'||['__proto__','constructor','prototype'].includes(e.name)||!index(e.sets,50)||Number(e.sets)<1))))throw Error('Hibás edzésterv.');
+ if(p.workouts!==undefined&&(!Array.isArray(p.workouts)||p.workouts.some(w=>!obj(w)||!obj(w.summary)||!Array.isArray(w.sets)||typeof w.dayId!=='string'||!index(w.cycle,1000)||!index(w.week,3))))throw Error('Hibás edzésösszesítés.');
+ if(p.session&&(!obj(p.session)||!index(p.session.cycle,1000)||!index(p.session.week,3)||typeof p.session.dayId!=='string'||!(p.program||DEFAULT_PROGRAM).some(d=>d.id===p.session.dayId)))throw Error('Hibás folyamatban lévő edzés.');
+ if(p.prs!==undefined&&!obj(p.prs)||p.openDays!==undefined&&!obj(p.openDays)||p.prefs!==undefined&&!obj(p.prefs)||p.timer!==undefined&&!obj(p.timer))throw Error('Hibás beállítás.');
+ return p;
+}
+function exportBackup(){const payload={format:'edzonaplo-backup',version:9,exportedAt:new Date().toISOString(),state:S};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`edzesnaplo-${dateKey(today())}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+async function importBackup(file){
+ if(!file)return;try{
+ if(file.size>10*1024*1024)throw Error('A fájl legfeljebb 10 MB lehet.');
+ const raw=JSON.parse(await file.text(),safeReviver),p=validateBackup(raw.state||raw);
+ if(!confirm('A visszatöltés lecseréli az ebben a böngészőben tárolt naplót. Ha szükséges, előbb töltsd le a jelenlegi mentést. Folytatod?'))return;
+ const next={view:'attekintes',cycle:0,week:0,activeDayId:'',openDays:{},data:{},program:clone(DEFAULT_PROGRAM),workouts:[],prs:{},session:null,lastSummary:null,timer:{end:0,duration:90,label:''},...p,program:normalizeProgram(p.program)};
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(next));storageBlocked=false;storageIssue='';S=next;load();render();showToast('Mentés visszatöltve ✓');
+ }catch(e){showToast('Sikertelen visszatöltés: '+e.message,'red');}
+}
+function renameExercise(dayId,oldName,newName){if(oldName===newName)return;for(const cycle of Object.values(S.data))for(const week of Object.values(cycle)){const day=week[dayId];if(day?.[oldName]){day[newName]={...day[newName],...day[oldName]};delete day[oldName];}}for(const w of S.workouts)if(w.dayId===dayId){w.sets.forEach(r=>{if(r.exercise===oldName)r.exercise=newName;});if(w.summary.best?.exercise===oldName)w.summary.best.exercise=newName;}S.prs[newName]=Math.max(S.prs[newName]||0,S.prs[oldName]||0);}
+function attachCalendar(){
+ document.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{calendarYear=Number(b.dataset.year);render();});
+ document.querySelectorAll('[data-month]').forEach(b=>b.onclick=()=>{calendarMonth=Number(b.dataset.month);render();});
+ document.querySelectorAll('[data-week-date]').forEach(b=>b.onclick=()=>openWeek(parseDate(b.dataset.weekDate)));
+ document.querySelectorAll('[data-current]').forEach(b=>b.onclick=()=>S.session?resumeSession():openWeek(today()));
+ document.getElementById('calendar-today')?.addEventListener('click',()=>{calendarYear=today().getUTCFullYear();calendarMonth=today().getUTCMonth();render();});
+ document.getElementById('resume-session')?.addEventListener('click',resumeSession);
+ document.querySelectorAll('[data-open-day]').forEach(b=>b.onclick=()=>{if(S.session&&S.session.dayId!==b.dataset.openDay)return showToast('Előbb fejezd be a megkezdett edzést.','warn');S.activeDayId=b.dataset.openDay;S.view='mai';render();window.scrollTo(0,0);});
+ document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const {day,ex,set}=b.dataset,prev=getPrev(S.cycle,S.week,day,ex,+set),cell=gc(S.cycle,S.week,day,ex,+set);if((cell.suly!==undefined&&cell.suly!==''||cell.ism!==undefined&&cell.ism!=='')&&!confirm('Lecseréled a sorozat beírt súlyát és ismétlésszámát az előző értékekre?'))return;sc(S.cycle,S.week,day,ex,+set,'suly',prev.suly);sc(S.cycle,S.week,day,ex,+set,'ism',prev.ism);sc(S.cycle,S.week,day,ex,+set,'done',false);render();showToast('Súly és ismétlés átvéve. A RIR-t add meg az új sorozat alapján.');});
+ document.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const {day,ex,set}=b.dataset,cell=gc(S.cycle,S.week,day,ex,+set);if([...b.closest('.set-row').querySelectorAll('input')].some(inp=>!inp.checkValidity()))return showToast('Javítsd a sorozat hibás értékét.','warn');if(!isValidSet(cell))return showToast('Adj meg súlyt (0 is lehet) és pozitív, egész ismétlésszámot.','warn');const done=!isDone(cell);sc(S.cycle,S.week,day,ex,+set,'done',done);if(done&&S.prefs.autoRest){S.timer={end:Date.now()+S.prefs.rest*1000,duration:S.prefs.rest,label:ex};save(true);}render();});
+ const preview=()=>{const d=parseDate(document.getElementById('map-date')?.value),el=document.getElementById('mapping-preview');if(d&&el)el.textContent='A kiválasztott hét: '+dateRange(monday(d));};
+ document.getElementById('map-date')?.addEventListener('input',preview);
+ document.getElementById('save-mapping')?.addEventListener('click',()=>{
+  const d=parseDate(document.getElementById('map-date').value),c=Number(document.getElementById('map-cycle').value)-1,w=Number(document.getElementById('map-week').value);
+  if(!d||!Number.isInteger(c)||c<0||c>999)return showToast('Adj meg érvényes ciklust és dátumot.','warn');
+  const anchor=dateKey(addDays(monday(d),-(c*4+w)*7));
+  if(!confirm(`${c+1}. ciklus, ${w+1}. hét = ${dateRange(monday(d))}. Ez alapján minden ciklus dátumot kap. Menthetjük?`))return;
+  S.calendar={anchor};save(true);const current=coordinate(today());if(current){S.cycle=current.c;S.week=current.w;}S.view='attekintes';render();showToast('A hetek dátumhoz rendelve ✓');
+ });
+ document.getElementById('cancel-session')?.addEventListener('click',()=>{if(!confirm('Megszakítod az edzést? A beírt sorozatok megmaradnak, de nem készül lezárt edzésösszesítés.'))return;S.session=null;S.timer.end=0;save(true);render();});
+ document.getElementById('export-data')?.addEventListener('click',exportBackup);
+ document.getElementById('import-data')?.addEventListener('change',e=>importBackup(e.target.files[0]));
+ document.getElementById('rest-duration')?.addEventListener('change',e=>{S.prefs.rest=Number(e.target.value);save();});
+ document.getElementById('auto-rest')?.addEventListener('change',e=>{S.prefs.autoRest=e.target.checked;save();});
 }
 
-function buildBottomNav() {
-  return `
-    <nav class="bottom-nav">
-      <button class="nav-btn ${state.view==='naplo'?'active':''}" data-view="naplo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9 12h6M9 16h4" stroke-linecap="round"/>
-        </svg>
-        Napló
-      </button>
-      <button class="nav-btn ${state.view==='statisztika'?'active':''}" data-view="statisztika">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 18l4-8 4 6 4-4 4 6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 6h18M3 10h18" stroke-linecap="round" opacity="0.2"/>
-        </svg>
-        Statisztika
-      </button>
-    </nav>`;
-}
-
-function attachEvents() {
-  // Tab switches
-  document.querySelectorAll("[data-type='cycle']").forEach(btn => {
-    btn.addEventListener("click", () => {
-      state.cycle = parseInt(btn.dataset.idx);
-      render();
-    });
-  });
-  document.querySelectorAll("[data-type='week']").forEach(btn => {
-    btn.addEventListener("click", () => {
-      state.week = parseInt(btn.dataset.idx);
-      render();
-    });
-  });
-
-  // Day toggles
-  document.querySelectorAll(".day-header").forEach(header => {
-    header.addEventListener("click", () => {
-      const dayId = header.dataset.day;
-      state.openDays[dayId] = !state.openDays[dayId];
-      const block = document.getElementById("day-" + dayId);
-      block.classList.toggle("open", state.openDays[dayId]);
-      block.querySelector(".day-chevron").style.transform = state.openDays[dayId] ? "rotate(180deg)" : "";
-    });
-  });
-
-  // Input changes (debounced save)
-  let saveTimer;
-  document.querySelectorAll(".set-input").forEach(input => {
-    input.addEventListener("change", () => {
-      const { day, ex, set, field } = input.dataset;
-      setCell(state.cycle, state.week, day, ex, parseInt(set), field, input.value);
-    });
-    input.addEventListener("blur", () => {
-      const { day, ex, set, field } = input.dataset;
-      setCell(state.cycle, state.week, day, ex, parseInt(set), field, input.value);
-    });
-  });
-
-  // Bottom nav
-  document.querySelectorAll("[data-view]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      state.view = btn.dataset.view;
-      render();
-    });
-  });
-}
-
-// Boot
-loadState();
-render();
+load();render();
 </script>
 </body>
 </html>
